@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Touch Lock"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtOverlayStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Overlay permission: ..."
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/txtTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGrantOverlay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Grant 'Display over other apps'"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/txtOverlayStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtDim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Screen dim (optional)"
+        android:layout_marginTop="18dp"
+        app:layout_constraintTop_toBottomOf="@id/btnGrantOverlay"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtDimValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20%"
+        app:layout_constraintBaseline_toBaselineOf="@id/txtDim"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <SeekBar
+        android:id="@+id/seekDim"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="80"
+        android:progress="20"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/txtDim"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switchUnlockButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Show UNLOCK button (long press)"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/seekDim"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switchDoubleTap"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Double-tap anywhere to unlock"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@id/switchUnlockButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switchEdgeHandle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Edge handle unlock (long press)"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@id/switchDoubleTap"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switchShakeUnlock"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Shake to unlock"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@id/switchEdgeHandle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto-unlock timer"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/switchShakeUnlock"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Spinner
+        android:id="@+id/spinnerTimer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@id/txtTimer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnStartLock"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="START Touch Lock"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/spinnerTimer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnStopLock"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="STOP Touch Lock"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btnStartLock"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Pro tip:\nAdd the Touch Lock tile to Quick Settings and toggle ON/OFF fast."
+        app:layout_constraintTop_toBottomOf="@id/btnStopLock"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
