@@ -1,156 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#101114">
 
-    <TextView
-        android:id="@+id/txtTitle"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Touch Lock"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <TextView
-        android:id="@+id/txtOverlayStatus"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Overlay permission: ..."
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/txtTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TouchLock"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGrantOverlay"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Grant 'Display over other apps'"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/txtOverlayStatus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/txtSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Block accidental screen touches while watching videos, reading, or using apps."
+            android:textColor="#CFCFCF"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/txtDim"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Screen dim (optional)"
-        android:layout_marginTop="18dp"
-        app:layout_constraintTop_toBottomOf="@id/btnGrantOverlay"
-        app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/txtOverlayStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Overlay permission: Not granted"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/txtDimValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="20%"
-        app:layout_constraintBaseline_toBaselineOf="@id/txtDim"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <Button
+            android:id="@+id/btnGrantOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Grant Overlay Permission" />
 
-    <SeekBar
-        android:id="@+id/seekDim"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:max="80"
-        android:progress="20"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/txtDim"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="#1A1D24"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switchUnlockButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Show UNLOCK button (long press)"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/seekDim"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switchDoubleTap"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Double-tap anywhere to unlock"
-        android:layout_marginTop="6dp"
-        app:layout_constraintTop_toBottomOf="@id/switchUnlockButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <Switch
+                android:id="@+id/switchShowUnlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Show unlock button"
+                android:textColor="#FFFFFF" />
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switchEdgeHandle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Edge handle unlock (long press)"
-        android:layout_marginTop="6dp"
-        app:layout_constraintTop_toBottomOf="@id/switchDoubleTap"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <Switch
+                android:id="@+id/switchDoubleTap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enable double tap unlock"
+                android:textColor="#FFFFFF" />
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switchShakeUnlock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Shake to unlock"
-        android:layout_marginTop="6dp"
-        app:layout_constraintTop_toBottomOf="@id/switchEdgeHandle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <Switch
+                android:id="@+id/switchRequirePin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Require PIN to unlock"
+                android:textColor="#FFFFFF" />
 
-    <TextView
-        android:id="@+id/txtTimer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Auto-unlock timer"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/switchShakeUnlock"
-        app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="PIN"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-    <Spinner
-        android:id="@+id/spinnerTimer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        app:layout_constraintTop_toBottomOf="@id/txtTimer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <EditText
+                android:id="@+id/edtPin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:hint="Example: 1234"
+                android:inputType="numberPassword"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnStartLock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="START Touch Lock"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/spinnerTimer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Auto-lock delay in seconds"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnStopLock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="STOP Touch Lock"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/btnStartLock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <EditText
+                android:id="@+id/edtDelay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:hint="0 = start immediately"
+                android:inputType="number"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA" />
 
-    <TextView
-        android:id="@+id/txtInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="Pro tip:\nAdd the Touch Lock tile to Quick Settings and toggle ON/OFF fast."
-        app:layout_constraintTop_toBottomOf="@id/btnStopLock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <Button
+                android:id="@+id/btnSaveSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Save Settings" />
+        </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btnStartLock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Start Touch Lock" />
+
+        <Button
+            android:id="@+id/btnStopLock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Stop Touch Lock" />
+
+        <TextView
+            android:id="@+id/txtInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Unlock options:\n• Use Unlock button\n• Double tap screen\n• Enter PIN if enabled\n• Or press STOP from notification\n\nQuick Settings tile:\nAdd the TouchLock tile from your phone quick settings panel."
+            android:textColor="#BBBBBB"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+</ScrollView>

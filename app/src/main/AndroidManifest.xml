@@ -22,19 +22,19 @@
 
         <service
             android:name=".TouchLockService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:exported="false" />
 
-        <!-- Quick Settings Tile -->
         <service
-            android:name=".TouchLockTileService"
-            android:label="Touch Lock"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-            android:exported="true">
+            android:name=".TouchTileService"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="TouchLock Tile"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
 
     </application>
+
 </manifest>

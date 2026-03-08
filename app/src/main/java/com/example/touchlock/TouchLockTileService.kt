@@ -1,11 +1,10 @@
 package com.example.touchlock
 
+import android.content.Intent
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.example.touchlock.TouchLockState
-import com.example.touchlock.TouchLockService
 
-class TouchLockTileService : TileService() {
+class TouchTileService : TileService() {
 
     override fun onStartListening() {
         super.onStartListening()
@@ -15,23 +14,29 @@ class TouchLockTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        // Toggle
-        val locked = TouchLockState.isLocked(this)
-        if (locked) {
-            TouchLockService.stop(this)
+        if (TouchLockService.isRunning) {
+            val stopIntent = Intent(this, TouchLockService::class.java).apply {
+                action = TouchLockService.ACTION_STOP
+            }
+            startService(stopIntent)
         } else {
-            TouchLockService.start(this)
+            val startIntent = Intent(this, TouchLockService::class.java).apply {
+                action = TouchLockService.ACTION_START
+            }
+            startService(startIntent)
         }
-        // Update tile after click
-        updateTile()
+
+        qsTile?.let { tile ->
+            tile.state = if (TouchLockService.isRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+            tile.updateTile()
+        }
     }
 
     private fun updateTile() {
-        val tile = qsTile ?: return
-        val locked = TouchLockState.isLocked(this)
-
-        tile.state = if (locked) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-        tile.label = if (locked) "Touch Lock: ON" else "Touch Lock: OFF"
-        tile.updateTile()
+        qsTile?.let { tile ->
+            tile.label = "TouchLock"
+            tile.state = if (TouchLockService.isRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+            tile.updateTile()
+        }
     }
 }

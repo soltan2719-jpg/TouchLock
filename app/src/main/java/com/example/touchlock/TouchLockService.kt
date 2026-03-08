@@ -1,257 +1,423 @@
 package com.example.touchlock
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.PixelFormat
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.view.*
+import android.text.InputType
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.app.NotificationCompat
-import androidx.core.content.edit
-import com.example.touchlock.databinding.OverlayLockBinding
-import com.example.touchlock.TouchLockState
-import kotlin.math.sqrt
 
-class TouchLockService : Service(), SensorEventListener {
+class TouchLockService : Service() {
 
-    private val prefs by lazy { getSharedPreferences(Prefs.NAME, MODE_PRIVATE) }
+    companion object {
+        const val ACTION_START = "com.example.touchlock.START"
+        const val ACTION_STOP = "com.example.touchlock.STOP"
 
-    private var wm: WindowManager? = null
-    private var overlayView: View? = null
-    private var binding: OverlayLockBinding? = null
+        private const val CHANNEL_ID = "touch_lock_channel"
+        private const val NOTIFICATION_ID = 101
 
-    // Double tap detection
-    private var lastTapTime = 0L
+        @Volatile
+        var isRunning = false
+    }
 
-    // Timer auto-unlock
+    private lateinit var windowManager: WindowManager
     private val handler = Handler(Looper.getMainLooper())
-    private val autoUnlockRunnable = Runnable { stopSelf() }
 
-    // Shake unlock
-    private var sensorManager: SensorManager? = null
-    private var accel: Sensor? = null
-    private var lastShakeTime = 0L
+    private var lockOverlay: View? = null
+    private var unlockButton: View? = null
+    private var pinOverlay: View? = null
+
+    private var lastTapTime = 0L
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(NOTIF_ID, buildNotification())
-        showOverlay()
-        applyAutoUnlockTimer()
-        maybeStartShakeListener()
-        TouchLockState.setLocked(this, true)
-    }
-
-    override fun onDestroy() {
-        removeOverlay()
-        stopShakeListener()
-        handler.removeCallbacks(autoUnlockRunnable)
-        TouchLockState.setLocked(this, false)
-        super.onDestroy()
+        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        createNotificationChannel()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
-            ACTION_UNLOCK -> {
-                stopSelf()
-                return START_NOT_STICKY
+            ACTION_START -> {
+                startForeground(NOTIFICATION_ID, buildNotification())
+                startLockWithDelay()
+            }
+
+            ACTION_STOP -> {
+                stopLock()
+            }
+
+            else -> {
+                startForeground(NOTIFICATION_ID, buildNotification())
+                startLockWithDelay()
             }
         }
         return START_STICKY
     }
 
-    private fun showOverlay() {
-        if (overlayView != null) return
+    private fun startLockWithDelay() {
+        removeOverlays()
 
-        wm = getSystemService(WINDOW_SERVICE) as WindowManager
-        val inflater = LayoutInflater.from(this)
-        val b = OverlayLockBinding.inflate(inflater)
-        binding = b
+        val delaySeconds = Prefs.getAutoLockDelay(this)
+        if (delaySeconds <= 0) {
+            showLockOverlay()
+            return
+        }
 
-        // Settings
-        val dim = prefs.getInt(Prefs.DIM_PERCENT, 20).coerceIn(0, 80)
-        val showBtn = prefs.getBoolean(Prefs.SHOW_UNLOCK_BTN, true)
-        val doubleTap = prefs.getBoolean(Prefs.DOUBLE_TAP_UNLOCK, true)
-        val edgeHandle = prefs.getBoolean(Prefs.EDGE_HANDLE_UNLOCK, true)
+        val overlayType = getOverlayType()
 
-        b.dimLayer.alpha = dim / 100f
-        b.unlockButton.visibility = if (showBtn) View.VISIBLE else View.GONE
-        b.edgeHandle.visibility = if (edgeHandle) View.VISIBLE else View.GONE
+        val armingOverlay = FrameLayout(this).apply {
+            setBackgroundColor(Color.parseColor("#66000000"))
+            isClickable = true
+            isFocusable = false
 
-        // Consume ALL touches
-        b.root.setOnTouchListener { _, event ->
-            if (doubleTap && event.action == MotionEvent.ACTION_DOWN) {
-                val now = System.currentTimeMillis()
-                if (now - lastTapTime < 300) {
-                    stopSelf()
-                    return@setOnTouchListener true
-                }
-                lastTapTime = now
+            val textView = TextView(this@TouchLockService).apply {
+                text = "Touch lock will start in $delaySeconds second(s)..."
+                textSize = 20f
+                setTextColor(Color.WHITE)
+                setPadding(40, 40, 40, 40)
+                setBackgroundColor(Color.parseColor("#CC111111"))
             }
-            true
-        }
 
-        // Long press unlock button
-        b.unlockButton.setOnLongClickListener {
-            stopSelf()
-            true
-        }
-
-        // Edge handle: long press
-        b.edgeHandle.setOnLongClickListener {
-            stopSelf()
-            true
-        }
-
-        // Text hint
-        b.txtHint.text = buildString {
-            append("Touch is LOCKED\n")
-            if (doubleTap) append("• Double-tap anywhere to unlock\n")
-            if (edgeHandle) append("• Long-press edge handle to unlock\n")
-            if (showBtn) append("• Long-press UNLOCK button\n")
-            append("• Or use notification UNLOCK")
+            addView(
+                textView,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
+                )
+            )
         }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            overlayType,
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         )
-
         params.gravity = Gravity.TOP or Gravity.START
 
-        overlayView = b.root
-        wm?.addView(overlayView, params)
+        windowManager.addView(armingOverlay, params)
+        lockOverlay = armingOverlay
+
+        handler.postDelayed({
+            removeOverlays()
+            showLockOverlay()
+        }, delaySeconds * 1000L)
+
+        isRunning = true
     }
 
-    private fun removeOverlay() {
-        try {
-            overlayView?.let { wm?.removeView(it) }
-        } catch (_: Exception) {
-        } finally {
-            overlayView = null
-            binding = null
+    private fun showLockOverlay() {
+        if (lockOverlay != null) return
+
+        val overlayType = getOverlayType()
+
+        val fullOverlay = FrameLayout(this).apply {
+            setBackgroundColor(Color.parseColor("#01000000"))
+
+            setOnTouchListener { _, event ->
+                if (Prefs.isDoubleTapEnabled(this@TouchLockService) &&
+                    event.action == MotionEvent.ACTION_UP
+                ) {
+                    handleDoubleTap()
+                }
+                true
+            }
         }
-    }
 
-    private fun applyAutoUnlockTimer() {
-        handler.removeCallbacks(autoUnlockRunnable)
+        val overlayParams = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            overlayType,
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
+        )
+        overlayParams.gravity = Gravity.TOP or Gravity.START
 
-        val index = prefs.getInt(Prefs.TIMER_INDEX, 0).coerceIn(0, 4)
-        val ms = when (index) {
-            1 -> 30_000L
-            2 -> 60_000L
-            3 -> 5 * 60_000L
-            4 -> 10 * 60_000L
-            else -> 0L
+        windowManager.addView(fullOverlay, overlayParams)
+        lockOverlay = fullOverlay
+
+        if (Prefs.isShowUnlockButton(this)) {
+            val button = Button(this).apply {
+                text = "Unlock"
+                textSize = 16f
+                setPadding(30, 20, 30, 20)
+                setBackgroundColor(Color.parseColor("#CC111111"))
+                setTextColor(Color.WHITE)
+
+                setOnClickListener {
+                    requestUnlock()
+                }
+            }
+
+            val buttonParams = WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                overlayType,
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                PixelFormat.TRANSLUCENT
+            )
+            buttonParams.gravity = Gravity.TOP or Gravity.END
+            buttonParams.x = 40
+            buttonParams.y = 120
+
+            windowManager.addView(button, buttonParams)
+            unlockButton = button
         }
 
-        if (ms > 0) {
-            handler.postDelayed(autoUnlockRunnable, ms)
-        }
+        isRunning = true
     }
 
-    private fun maybeStartShakeListener() {
-        val shakeEnabled = prefs.getBoolean(Prefs.SHAKE_UNLOCK, false)
-        if (!shakeEnabled) return
-
-        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        accel = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        accel?.let {
-            sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
-        }
-    }
-
-    private fun stopShakeListener() {
-        sensorManager?.unregisterListener(this)
-        sensorManager = null
-        accel = null
-    }
-
-    override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type != Sensor.TYPE_ACCELEROMETER) return
-
-        // Simple shake detection
-        val x = event.values[0]
-        val y = event.values[1]
-        val z = event.values[2]
-        val g = sqrt((x * x + y * y + z * z).toDouble())
-
-        // Typically around 9.8 when steady; shake can spike
+    private fun handleDoubleTap() {
         val now = System.currentTimeMillis()
-        val cooldown = 900L
+        if (now - lastTapTime < 300) {
+            requestUnlock()
+        }
+        lastTapTime = now
+    }
 
-        if (g > 17 && now - lastShakeTime > cooldown) {
-            lastShakeTime = now
-            stopSelf()
+    private fun requestUnlock() {
+        if (Prefs.isPinRequired(this)) {
+            showPinOverlay()
+        } else {
+            stopLock()
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    private fun showPinOverlay() {
+        if (pinOverlay != null) return
+
+        val overlayType = getOverlayType()
+
+        val root = FrameLayout(this).apply {
+            setBackgroundColor(Color.parseColor("#66000000"))
+        }
+
+        val card = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 50, 50, 50)
+            setBackgroundColor(Color.parseColor("#FF1A1A1A"))
+        }
+
+        val title = TextView(this).apply {
+            text = "Enter PIN to Unlock"
+            textSize = 20f
+            setTextColor(Color.WHITE)
+        }
+
+        val input = EditText(this).apply {
+            hint = "PIN"
+            setHintTextColor(Color.parseColor("#AAAAAA"))
+            setTextColor(Color.WHITE)
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+        }
+
+        val info = TextView(this).apply {
+            text = ""
+            textSize = 14f
+            setTextColor(Color.RED)
+        }
+
+        val rowButtons = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+        }
+
+        val btnCancel = Button(this).apply {
+            text = "Cancel"
+        }
+
+        val btnUnlock = Button(this).apply {
+            text = "Unlock"
+        }
+
+        rowButtons.addView(
+            btnCancel,
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        )
+        rowButtons.addView(
+            btnUnlock,
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        )
+
+        card.addView(title)
+        card.addView(input)
+        card.addView(info)
+        card.addView(rowButtons)
+
+        root.addView(
+            card,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER
+            ).apply {
+                leftMargin = 50
+                rightMargin = 50
+            }
+        )
+
+        val pinParams = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            overlayType,
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            PixelFormat.TRANSLUCENT
+        )
+        pinParams.gravity = Gravity.CENTER
+        pinParams.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+
+        windowManager.addView(root, pinParams)
+        pinOverlay = root
+
+        input.requestFocus()
+
+        handler.postDelayed({
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
+        }, 200)
+
+        btnCancel.setOnClickListener {
+            removePinOverlay()
+        }
+
+        btnUnlock.setOnClickListener {
+            val entered = input.text.toString().trim()
+            val realPin = Prefs.getPin(this)
+
+            if (entered == realPin) {
+                stopLock()
+            } else {
+                info.text = "Wrong PIN"
+            }
+        }
+    }
+
+    private fun removePinOverlay() {
+        pinOverlay?.let {
+            windowManager.removeView(it)
+            pinOverlay = null
+        }
+    }
+
+    private fun stopLock() {
+        handler.removeCallbacksAndMessages(null)
+        removeOverlays()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+        isRunning = false
+    }
+
+    private fun removeOverlays() {
+        try {
+            lockOverlay?.let {
+                windowManager.removeView(it)
+            }
+        } catch (_: Exception) {
+        }
+        lockOverlay = null
+
+        try {
+            unlockButton?.let {
+                windowManager.removeView(it)
+            }
+        } catch (_: Exception) {
+        }
+        unlockButton = null
+
+        try {
+            pinOverlay?.let {
+                windowManager.removeView(it)
+            }
+        } catch (_: Exception) {
+        }
+        pinOverlay = null
+    }
 
     private fun buildNotification(): Notification {
-        createNotificationChannel()
+        val stopIntent = Intent(this, TouchLockService::class.java).apply {
+            action = ACTION_STOP
+        }
 
-        val unlockIntent = Intent(this, TouchLockService::class.java).apply { action = ACTION_UNLOCK }
-        val unlockPending = PendingIntent.getService(
+        val stopPendingIntent = PendingIntent.getService(
             this,
-            1,
-            unlockIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            0,
+            stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or pendingIntentImmutableFlag()
         )
 
         val openAppIntent = Intent(this, MainActivity::class.java)
-        val openAppPending = PendingIntent.getActivity(
+        val openPendingIntent = PendingIntent.getActivity(
             this,
-            2,
+            1,
             openAppIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or pendingIntentImmutableFlag()
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("TouchLock is active")
+            .setContentText("Touches are blocked")
             .setSmallIcon(android.R.drawable.ic_lock_lock)
-            .setContentTitle("Touch Lock is ON")
-            .setContentText("Tap UNLOCK to stop blocking touches.")
-            .setContentIntent(openAppPending)
+            .setContentIntent(openPendingIntent)
             .setOngoing(true)
-            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "UNLOCK", unlockPending)
+            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "STOP", stopPendingIntent)
             .build()
     }
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            "Touch Lock",
-            NotificationManager.IMPORTANCE_LOW
-        )
-        channel.setSound(null, null)
-        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(channel)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Touch Lock",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
     }
 
-    companion object {
-        private const val CHANNEL_ID = "touch_lock_channel"
-        private const val NOTIF_ID = 1001
-        private const val ACTION_UNLOCK = "ACTION_UNLOCK"
-
-        fun start(context: Context) {
-            val i = Intent(context, TouchLockService::class.java)
-            context.startForegroundService(i)
+    private fun getOverlayType(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            WindowManager.LayoutParams.TYPE_PHONE
         }
+    }
 
-        fun stop(context: Context) {
-            context.stopService(Intent(context, TouchLockService::class.java))
+    private fun pendingIntentImmutableFlag(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE
+        } else {
+            0
         }
+    }
+
+    override fun onDestroy() {
+        removeOverlays()
+        isRunning = false
+        super.onDestroy()
     }
 }
