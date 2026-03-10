@@ -2,13 +2,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#101114">
+    android:background="#0F1115">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="18dp">
 
         <TextView
             android:id="@+id/txtTitle"
@@ -23,39 +23,105 @@
             android:id="@+id/txtSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Block accidental screen touches while watching videos, reading, or using apps."
+            android:layout_marginTop="6dp"
+            android:text="Version 4 - better design + app-based auto start"
             android:textColor="#CFCFCF"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/txtOverlayStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Overlay permission: Not granted"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/btnGrantOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Grant Overlay Permission" />
+            android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="#1A1D24"
+            android:layout_marginTop="18dp"
+            android:background="#1A1F29"
             android:orientation="vertical"
             android:padding="16dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Settings"
+                android:text="Permissions"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtOverlayStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Overlay permission: Not granted"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btnGrantOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Grant Overlay Permission" />
+
+            <TextView
+                android:id="@+id/txtUsageStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Usage access: Not granted"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btnGrantUsageAccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Grant Usage Access" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#1A1F29"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Auto Start Apps"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnPickApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Pick Apps" />
+
+            <TextView
+                android:id="@+id/txtSelectedApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Selected apps: none"
+                android:textColor="#CFCFCF"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#1A1F29"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Unlock Settings"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -64,7 +130,7 @@
                 android:id="@+id/switchShowUnlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="12dp"
                 android:text="Show unlock button"
                 android:textColor="#FFFFFF" />
 
@@ -85,7 +151,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
                 android:text="PIN"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
@@ -103,8 +169,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Auto-lock delay in seconds"
+                android:layout_marginTop="14dp"
+                android:text="Auto-lock delay (seconds)"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
@@ -113,41 +179,80 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FFFFFF"
-                android:hint="0 = start immediately"
+                android:hint="0 = immediate"
                 android:inputType="number"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AAAAAA" />
-
-            <Button
-                android:id="@+id/btnSaveSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="Save Settings" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnStartLock"
+            android:id="@+id/btnSaveSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Start Touch Lock" />
+            android:layout_marginTop="18dp"
+            android:text="Save Settings" />
 
         <Button
-            android:id="@+id/btnStopLock"
+            android:id="@+id/btnStartLockNow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Stop Touch Lock" />
+            android:text="Lock Now" />
+
+        <Button
+            android:id="@+id/btnStartMonitor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Start Monitor Mode" />
+
+        <Button
+            android:id="@+id/btnStopAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Stop Everything" />
+
+        <Button
+            android:id="@+id/btnPremium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upgrade to Premium" />
+
+        <Button
+            android:id="@+id/btnTip1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tip developer 1€" />
+
+        <Button
+            android:id="@+id/btnTip2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tip developer 2€" />
+
+        <Button
+            android:id="@+id/btnTip5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tip developer 5€" />
+
+        <FrameLayout
+            android:id="@+id/adContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/txtInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Unlock options:\n• Use Unlock button\n• Double tap screen\n• Enter PIN if enabled\n• Or press STOP from notification\n\nQuick Settings tile:\nAdd the TouchLock tile from your phone quick settings panel."
-            android:textColor="#BBBBBB"
-            android:textSize="15sp" />
+            android:layout_marginTop="18dp"
+            android:paddingBottom="20dp"
+            android:text="How monitor mode works:\n1. Grant Overlay + Usage Access\n2. Pick apps\n3. Start Monitor Mode\n4. When one of those apps opens, TouchLock starts automatically\n\nUnlock options:\n• Unlock button\n• Double tap\n• PIN if enabled\n• STOP from notification"
+            android:textColor="#B8BDC9"
+            android:textSize="14sp" />
 
     </LinearLayout>
 </ScrollView>
