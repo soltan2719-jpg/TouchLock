@@ -236,6 +236,17 @@ class MainActivity : AppCompatActivity() {
         val overlayGranted = Settings.canDrawOverlays(this)
         val usageGranted = hasUsageAccess()
 
+        binding.txtSystemStatus.text =
+            if (Settings.canDrawOverlays(this)) "Ready"
+            else "Needs permission"
+
+        binding.txtSystemStatus.setTextColor(
+            ContextCompat.getColor(
+                this,
+                if (Settings.canDrawOverlays(this)) R.color.success else R.color.warning
+            )
+        )
+
         binding.txtOverlayStatus.text =
             if (overlayGranted) "Overlay permission: Granted"
             else "Overlay permission: Not granted"

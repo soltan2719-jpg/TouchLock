@@ -2,21 +2,23 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0F1115">
+    android:background="@color/bg_main"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="18dp">
+        android:padding="20dp">
 
+        <!-- HEADER -->
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TouchLock"
-            android:textColor="#FFFFFF"
-            android:textSize="30sp"
+            android:textColor="@color/text_main"
+            android:textSize="32sp"
             android:textStyle="bold" />
 
         <TextView
@@ -24,105 +26,202 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Version 4 - better design + app-based auto start"
-            android:textColor="#CFCFCF"
-            android:textSize="15sp" />
+            android:text="TouchLock is ready."
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp" />
 
+        <!-- STATUS CARD -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:background="#1A1F29"
+            android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Permissions"
-                android:textColor="#FFFFFF"
+                android:text="System Status"
+                android:textColor="@color/text_main"
                 android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtSystemStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Ready"
+                android:textColor="@color/success"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtOverlayStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="Overlay permission: Not granted"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/btnGrantOverlay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Grant Overlay Permission" />
+                android:layout_marginTop="12dp"
+                android:text="Overlay permission: Granted"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/txtUsageStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="6dp"
                 android:text="Usage access: Not granted"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/btnGrantUsageAccess"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Grant Usage Access" />
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnGrantOverlay"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_secondary_button"
+                    android:text="Overlay"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_main" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="1dp" />
+
+                <Button
+                    android:id="@+id/btnGrantUsageAccess"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_secondary_button"
+                    android:text="Usage Access"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_main" />
+            </LinearLayout>
         </LinearLayout>
 
+        <!-- MAIN ACTION -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="#1A1F29"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_card"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Auto Start Apps"
-                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:text="Main Action"
+                android:textColor="@color/text_main"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/btnPickApps"
+                android:id="@+id/btnStartLockNow"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_circle_primary"
+                android:text="🔒\nLock Now"
+                android:textAllCaps="false"
+                android:textColor="@color/text_main"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnStopAll"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_secondary_button"
+                android:text="Stop Everything"
+                android:textAllCaps="false"
+                android:textColor="@color/text_main"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- AUTO START CARD -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Pick Apps" />
+                android:text="Auto-Start"
+                android:textColor="@color/text_main"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtSelectedApps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:text="Selected apps: none"
-                android:textColor="#CFCFCF"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPickApps"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_secondary_button"
+                    android:text="Pick Apps"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_main" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="1dp" />
+
+                <Button
+                    android:id="@+id/btnStartMonitor"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_secondary_button"
+                    android:text="Monitor Mode"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_main" />
+            </LinearLayout>
         </LinearLayout>
 
+        <!-- PROTECTION CARD -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="#1A1F29"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Unlock Settings"
-                android:textColor="#FFFFFF"
+                android:text="Protection"
+                android:textColor="@color/text_main"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -130,128 +229,177 @@
                 android:id="@+id/switchShowUnlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="14dp"
                 android:text="Show unlock button"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/text_main" />
 
             <Switch
                 android:id="@+id/switchDoubleTap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Enable double tap unlock"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/text_main" />
 
             <Switch
                 android:id="@+id/switchRequirePin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Require PIN to unlock"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/text_main" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="PIN"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_main"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edtPin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
+                android:layout_marginTop="6dp"
+                android:backgroundTint="@color/text_secondary"
                 android:hint="Example: 1234"
                 android:inputType="numberPassword"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#AAAAAA" />
+                android:textColor="@color/text_main"
+                android:textColorHint="@color/text_secondary" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="Auto-lock delay (seconds)"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_main"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edtDelay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
+                android:layout_marginTop="6dp"
+                android:backgroundTint="@color/text_secondary"
                 android:hint="0 = immediate"
                 android:inputType="number"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#AAAAAA" />
+                android:textColor="@color/text_main"
+                android:textColorHint="@color/text_secondary" />
+
+            <Button
+                android:id="@+id/btnSaveSettings"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_secondary_button"
+                android:text="Save Settings"
+                android:textAllCaps="false"
+                android:textColor="@color/text_main" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnSaveSettings"
+        <!-- SUPPORT CARD -->
+        <LinearLayout
+            android:id="@+id/supportContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="Save Settings" />
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="18dp">
 
-        <Button
-            android:id="@+id/btnStartLockNow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Lock Now" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Support"
+                android:textColor="@color/text_main"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnStartMonitor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Start Monitor Mode" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="TouchLock is free to use. Premium removes ads and unlocks advanced features."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
 
-        <Button
-            android:id="@+id/btnStopAll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Stop Everything" />
+            <Button
+                android:id="@+id/btnPremium"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_primary_button"
+                android:text="Upgrade to Premium"
+                android:textAllCaps="false"
+                android:textColor="@color/text_main"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnPremium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upgrade to Premium" />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none">
 
-        <Button
-            android:id="@+id/btnTip1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tip developer 1€" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnTip2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tip developer 2€" />
+                    <Button
+                        android:id="@+id/btnTip1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tip_button"
+                        android:text="☕ 1€"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_main" />
 
-        <Button
-            android:id="@+id/btnTip5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tip developer 5€" />
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="1dp" />
 
+                    <Button
+                        android:id="@+id/btnTip2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tip_button"
+                        android:text="☕ 2€"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_main" />
+
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="1dp" />
+
+                    <Button
+                        android:id="@+id/btnTip5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tip_button"
+                        android:text="❤️ 5€"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_main" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- AD -->
         <FrameLayout
             android:id="@+id/adContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:layout_marginBottom="8dp" />
 
+        <!-- INFO -->
         <TextView
             android:id="@+id/txtInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:paddingBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="22dp"
             android:text="How monitor mode works:\n1. Grant Overlay + Usage Access\n2. Pick apps\n3. Start Monitor Mode\n4. When one of those apps opens, TouchLock starts automatically\n\nUnlock options:\n• Unlock button\n• Double tap\n• PIN if enabled\n• STOP from notification"
-            android:textColor="#B8BDC9"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
     </LinearLayout>
