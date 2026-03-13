@@ -20,6 +20,8 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import android.widget.LinearLayout
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
@@ -103,6 +105,8 @@ class MainActivity : AppCompatActivity() {
             }
             startTouchLockService(intent)
             Toast.makeText(this, "Touch lock started", Toast.LENGTH_SHORT).show()
+            binding.btnStartLockNow.text = "🔓\nUnlock"
+            binding.txtSubtitle.text = "Protection active."
         }
 
         binding.btnStartMonitor.setOnClickListener {
@@ -136,6 +140,8 @@ class MainActivity : AppCompatActivity() {
             }
             startTouchLockService(intent)
             Toast.makeText(this, "Stopped", Toast.LENGTH_SHORT).show()
+            binding.btnStartLockNow.text = "🔒\nLock Now"
+            binding.txtSubtitle.text = "TouchLock is ready."
         }
 
         binding.btnPremium.setOnClickListener {
@@ -360,20 +366,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateSelectedAppsText() {
+        binding.chipsContainer.removeAllViews()
+
         if (selectedPackages.isEmpty()) {
             binding.txtSelectedApps.text = "Selected apps: none"
+            binding.scrollSelectedApps.visibility = android.view.View.GONE
             return
         }
 
-        val names = installedApps
-            .filter { selectedPackages.contains(it.packageName) }
-            .map { it.label }
+        val selectedApps = installedApps.filter { selectedPackages.contains(it.packageName) }
 
-        binding.txtSelectedApps.text =
-            if (names.isNotEmpty()) {
-                "Selected apps: ${names.joinToString(", ")}"
-            } else {
-                "Selected packages: ${selectedPackages.joinToString(", ")}"
+        binding.txtSelectedApps.text = "Apps selected for auto-start"
+        binding.scrollSelectedApps.visibility = android.view.View.VISIBLE
+
+        selectedApps.forEachIndexed { index, app ->
+            val chip = TextView(this).apply {
+                text = app.label
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_main))
+                textSize = 14f
+                setBackgroundResource(R.drawable.bg_app_chip)
+                setPadding(28, 16, 28, 16)
             }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            if (index > 0) {
+                params.marginStart = 12
+            }
+
+            binding.chipsContainer.addView(chip, params)
+        }
     }
 }

@@ -132,7 +132,7 @@
                 android:layout_height="180dp"
                 android:layout_marginTop="18dp"
                 android:background="@drawable/bg_circle_primary"
-                android:text="🔒\nLock Now"
+                android:text="🔒&#10;Lock Now"
                 android:textAllCaps="false"
                 android:textColor="@color/text_main"
                 android:textSize="22sp"
@@ -175,6 +175,20 @@
                 android:text="Selected apps: none"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
+
+            <HorizontalScrollView
+                android:id="@+id/scrollSelectedApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/chipsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
