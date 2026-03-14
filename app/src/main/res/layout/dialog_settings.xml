@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/card_bg"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Protection Settings"
+        android:textColor="@color/text_main"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Switch
+        android:id="@+id/dialogSwitchShowUnlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Show unlock button"
+        android:textColor="@color/text_main" />
+
+    <Switch
+        android:id="@+id/dialogSwitchDoubleTap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enable double tap unlock"
+        android:textColor="@color/text_main" />
+
+    <Switch
+        android:id="@+id/dialogSwitchRequirePin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Require PIN to unlock"
+        android:textColor="@color/text_main" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="PIN"
+        android:textColor="@color/text_main"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/dialogEdtPin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Example: 1234"
+        android:inputType="numberPassword"
+        android:textColor="@color/text_main"
+        android:textColorHint="@color/text_secondary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Auto-lock delay (seconds)"
+        android:textColor="@color/text_main"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/dialogEdtDelay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="0 = immediate"
+        android:inputType="number"
+        android:textColor="@color/text_main"
+        android:textColorHint="@color/text_secondary" />
+
+</LinearLayout>

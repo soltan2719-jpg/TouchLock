@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">TouchLock</string>
+    <string name="lock_now">🔒\nLock Now</string>
+    <string name="unlock">🔓\nUnlock</string>
+    <string name="protection_active">Protection active.</string>
+    <string name="touchlock_ready">TouchLock is ready.</string>
+    <string name="premium_enabled">Premium enabled</string>
+    <string name="upgrade_to_premium">Upgrade to Premium</string>
+    <string name="selected_apps_none">Selected apps: none</string>
+    <string name="apps_selected_for_autostart">Apps selected for auto-start</string>
 </resources>

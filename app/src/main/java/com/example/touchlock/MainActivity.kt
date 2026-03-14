@@ -3,6 +3,7 @@ package com.example.touchlock
 import android.Manifest
 import android.app.AppOpsManager
 import android.content.Context
+import android.content.Context.APP_OPS_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -15,13 +16,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.touchlock.databinding.ActivityMainBinding
 import android.view.View
-import android.widget.FrameLayout
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.EditText
+import androidx.appcompat.widget.SwitchCompat
+import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         requestNotificationPermissionIfNeeded()
 
         installedApps = loadLaunchableApps()
@@ -92,6 +96,14 @@ class MainActivity : AppCompatActivity() {
             showAppPickerDialog()
         }
 
+        binding.btnOpenSettings.setOnClickListener {
+            Toast.makeText(this, "Settings screen coming soon", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnOpenSupport.setOnClickListener {
+            showSupportDialog()
+        }
+
         binding.btnSaveSettings.setOnClickListener {
             saveSettings()
         }
@@ -105,8 +117,8 @@ class MainActivity : AppCompatActivity() {
             }
             startTouchLockService(intent)
             Toast.makeText(this, "Touch lock started", Toast.LENGTH_SHORT).show()
-            binding.btnStartLockNow.text = "🔓\nUnlock"
-            binding.txtSubtitle.text = "Protection active."
+            binding.btnStartLockNow.text = getString(R.string.unlock)
+            binding.txtSubtitle.text = getString(R.string.protection_active)
         }
 
         binding.btnStartMonitor.setOnClickListener {
@@ -140,8 +152,8 @@ class MainActivity : AppCompatActivity() {
             }
             startTouchLockService(intent)
             Toast.makeText(this, "Stopped", Toast.LENGTH_SHORT).show()
-            binding.btnStartLockNow.text = "🔒\nLock Now"
-            binding.txtSubtitle.text = "TouchLock is ready."
+            binding.btnStartLockNow.text = getString(R.string.lock_now)
+            binding.txtSubtitle.text = getString(R.string.touchlock_ready)
         }
 
         binding.btnPremium.setOnClickListener {
@@ -159,34 +171,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnTip5.setOnClickListener {
             billing.buyTip5()
         }
-
-        binding.btnStartMonitor.setOnClickListener {
-            if (!saveSettings()) return@setOnClickListener
-            if (!checkOverlayPermission()) return@setOnClickListener
-            if (!checkUsageAccessPermission()) {
-                Toast.makeText(this, "Please allow Usage Access first", Toast.LENGTH_SHORT).show()
-                openUsageAccessSettings()
-                return@setOnClickListener
-            }
-            if (selectedPackages.isEmpty()) {
-                Toast.makeText(this, "Please choose at least one app", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val intent = Intent(this, TouchLockService::class.java).apply {
-                action = TouchLockService.ACTION_START_MONITOR
-            }
-            startTouchLockService(intent)
-            Toast.makeText(this, "Monitor mode started", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.btnStopAll.setOnClickListener {
-            val intent = Intent(this, TouchLockService::class.java).apply {
-                action = TouchLockService.ACTION_STOP_ALL
-            }
-            startTouchLockService(intent)
-            Toast.makeText(this, "Stopped", Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun onResume() {
@@ -200,14 +184,79 @@ class MainActivity : AppCompatActivity() {
 
     private fun updatePremiumText() {
         if (Prefs.isPremium(this)) {
-            binding.btnPremium.text = "Premium enabled"
+            binding.btnPremium.text = getString(R.string.premium_enabled)
             binding.btnPremium.isEnabled = false
             binding.adContainer.visibility = View.GONE
         } else {
-            binding.btnPremium.text = "Upgrade to Premium"
+            binding.btnPremium.text = getString(R.string.upgrade_to_premium)
             binding.btnPremium.isEnabled = true
             binding.adContainer.visibility = View.VISIBLE
         }
+
+    }
+
+    private fun showSettingsDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_settings, null)
+
+        val switchShowUnlock = view.findViewById<SwitchCompat>(R.id.dialogSwitchShowUnlock)
+        val switchDoubleTap = view.findViewById<SwitchCompat>(R.id.dialogSwitchDoubleTap)
+        val switchRequirePin = view.findViewById<SwitchCompat>(R.id.dialogSwitchRequirePin)
+        val edtPin = view.findViewById<EditText>(R.id.dialogEdtPin)
+        val edtDelay = view.findViewById<EditText>(R.id.dialogEdtDelay)
+
+        switchShowUnlock.isChecked = Prefs.isShowUnlockButton(this)
+        switchDoubleTap.isChecked = Prefs.isDoubleTapEnabled(this)
+        switchRequirePin.isChecked = Prefs.isPinRequired(this)
+        edtPin.setText(Prefs.getPin(this))
+        edtDelay.setText(Prefs.getAutoLockDelay(this).toString())
+
+        AlertDialog.Builder(this)
+            .setView(view)
+            .setPositiveButton("Save") { _, _ ->
+                val pin = edtPin.text.toString().trim()
+                val delay = edtDelay.text.toString().trim().toIntOrNull() ?: 0
+
+                Prefs.setShowUnlockButton(this, switchShowUnlock.isChecked)
+                Prefs.setDoubleTapEnabled(this, switchDoubleTap.isChecked)
+                Prefs.setPinRequired(this, switchRequirePin.isChecked)
+                Prefs.setPin(this, pin)
+                Prefs.setAutoLockDelay(this, delay)
+
+                loadSettings()
+                Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showSupportDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_support, null)
+
+        val btnPremium = view.findViewById<Button>(R.id.dialogBtnPremium)
+        val btnTip1 = view.findViewById<Button>(R.id.dialogBtnTip1)
+        val btnTip2 = view.findViewById<Button>(R.id.dialogBtnTip2)
+        val btnTip5 = view.findViewById<Button>(R.id.dialogBtnTip5)
+
+        btnPremium.setOnClickListener {
+            billing.buyPremium()
+        }
+
+        btnTip1.setOnClickListener {
+            billing.buyTip1()
+        }
+
+        btnTip2.setOnClickListener {
+            billing.buyTip2()
+        }
+
+        btnTip5.setOnClickListener {
+            billing.buyTip5()
+        }
+
+        AlertDialog.Builder(this)
+            .setView(view)
+            .setNegativeButton("Close", null)
+            .show()
     }
 
     private fun loadSettings() {
@@ -289,7 +338,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hasUsageAccess(): Boolean {
-        val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val appOps = getSystemService(APP_OPS_SERVICE) as AppOpsManager
         val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             appOps.unsafeCheckOpNoThrow(
                 AppOpsManager.OPSTR_GET_USAGE_STATS,
@@ -369,15 +418,15 @@ class MainActivity : AppCompatActivity() {
         binding.chipsContainer.removeAllViews()
 
         if (selectedPackages.isEmpty()) {
-            binding.txtSelectedApps.text = "Selected apps: none"
-            binding.scrollSelectedApps.visibility = android.view.View.GONE
+            binding.txtSelectedApps.text = getString(R.string.selected_apps_none)
+            binding.scrollSelectedApps.visibility = View.GONE
             return
         }
 
         val selectedApps = installedApps.filter { selectedPackages.contains(it.packageName) }
 
-        binding.txtSelectedApps.text = "Apps selected for auto-start"
-        binding.scrollSelectedApps.visibility = android.view.View.VISIBLE
+        binding.txtSelectedApps.text = getString(R.string.apps_selected_for_autostart)
+        binding.scrollSelectedApps.visibility = View.VISIBLE
 
         selectedApps.forEachIndexed { index, app ->
             val chip = TextView(this).apply {
