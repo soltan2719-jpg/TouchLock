@@ -4,7 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import com.android.billingclient.api.*
+import com.android.billingclient.api.AcknowledgePurchaseParams
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryPurchasesParams
 
 class BillingManager(
     private val context: Context,
@@ -31,19 +39,12 @@ class BillingManager(
 
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(result: BillingResult) {
-                Log.d(TAG, "Billing setup result: ${result.responseCode} - ${result.debugMessage}")
-
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     isBillingReady = true
-                    Toast.makeText(context, "Billing connected", Toast.LENGTH_SHORT).show()
-                    checkPremium()
+                    Log.d(TAG, "Billing connected")
                 } else {
                     isBillingReady = false
-                    Toast.makeText(
-                        context,
-                        "Billing not ready: ${result.debugMessage}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Log.d(TAG, "Billing not ready: ${result.debugMessage}")
                 }
             }
 
@@ -77,23 +78,22 @@ class BillingManager(
             return
         }
 
-        Log.d(TAG, "Launching purchase for product: $productId")
-
+        // FIX: Changed BillingClient.ProductType.INAPP to "inapp" to fix K2 compiler crash
         val query = QueryProductDetailsParams.newBuilder()
             .setProductList(
                 listOf(
                     QueryProductDetailsParams.Product.newBuilder()
                         .setProductId(productId)
-                        .setProductType(BillingClient.ProductType.INAPP)
+                        .setProductType("inapp")
                         .build()
                 )
             )
             .build()
 
-        billingClient.queryProductDetailsAsync(query) { result, list ->
+        billingClient.queryProductDetailsAsync(query) { result, productDetailsList ->
             Log.d(
                 TAG,
-                "Product query result for $productId: ${result.responseCode} - ${result.debugMessage}, found=${list.size}"
+                "Product query result for $productId: ${result.responseCode} - ${result.debugMessage}, found=${productDetailsList.size}"
             )
 
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
@@ -105,7 +105,7 @@ class BillingManager(
                 return@queryProductDetailsAsync
             }
 
-            if (list.isEmpty()) {
+            if (productDetailsList.isEmpty()) {
                 Toast.makeText(
                     context,
                     "Product not found: $productId",
@@ -114,17 +114,18 @@ class BillingManager(
                 return@queryProductDetailsAsync
             }
 
-            val product = list[0]
+            val productDetails = productDetailsList.first()
 
-            val params = BillingFlowParams.ProductDetailsParams.newBuilder()
-                .setProductDetails(product)
+            val productDetailsParams =
+                BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(productDetails)
+                    .build()
+
+            val billingFlowParams = BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(listOf(productDetailsParams))
                 .build()
 
-            val flow = BillingFlowParams.newBuilder()
-                .setProductDetailsParamsList(listOf(params))
-                .build()
-
-            val launchResult = billingClient.launchBillingFlow(activity, flow)
+            val launchResult = billingClient.launchBillingFlow(activity, billingFlowParams)
             Log.d(
                 TAG,
                 "Launch billing flow result: ${launchResult.responseCode} - ${launchResult.debugMessage}"
@@ -139,8 +140,8 @@ class BillingManager(
         Log.d(TAG, "Purchases updated: ${result.responseCode} - ${result.debugMessage}")
 
         if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-            purchases?.forEach {
-                handlePurchase(it)
+            purchases?.forEach { purchase ->
+                handlePurchase(purchase)
             }
         } else if (result.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             Toast.makeText(context, "Purchase canceled", Toast.LENGTH_SHORT).show()
@@ -177,24 +178,43 @@ class BillingManager(
         }
     }
 
-    fun checkPremium() {
-        if (!::billingClient.isInitialized || !isBillingReady) return
+    fun checkPremium(onResult: ((Boolean) -> Unit)? = null) {
+        if (!::billingClient.isInitialized || !isBillingReady) {
+            onResult?.invoke(Prefs.isPremium(context))
+            return
+        }
 
+        // FIX: Changed BillingClient.ProductType.INAPP to "inapp" here as well
         billingClient.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.INAPP)
+                .setProductType("inapp")
                 .build()
-        ) { result, list ->
+        ) { result, purchasesList ->
             Log.d(TAG, "Check premium result: ${result.responseCode} - ${result.debugMessage}")
 
-            var hasPremium = false
-            list.forEach {
-                if (it.products.contains(premiumId)) {
-                    hasPremium = true
-                }
+            val hasPremium = purchasesList.any { purchase ->
+                purchase.products.contains(premiumId)
             }
 
             Prefs.setPremium(context, hasPremium)
+            onResult?.invoke(hasPremium)
+        }
+    }
+
+    fun restorePurchase(onRestored: (() -> Unit)? = null) {
+        checkPremium { hasPremium ->
+            if (hasPremium) {
+                Toast.makeText(context, "Purchase restored", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "No premium purchase found", Toast.LENGTH_SHORT).show()
+            }
+            onRestored?.invoke()
+        }
+    }
+
+    fun endConnection() {
+        if (::billingClient.isInitialized) {
+            billingClient.endConnection()
         }
     }
 }

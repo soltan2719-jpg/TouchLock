@@ -7,7 +7,6 @@
     android:padding="20dp"
     android:paddingBottom="12dp">
 
-    <!-- Header -->
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
@@ -26,8 +25,6 @@
         android:textColor="@color/text_secondary"
         android:textSize="16sp" />
 
-
-    <!-- Status card -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -81,12 +78,8 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
         </LinearLayout>
-
     </LinearLayout>
 
-
-
-    <!-- Main action (SMALLER NOW) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -118,20 +111,14 @@
             android:textAllCaps="false"
             android:textColor="@color/text_main"
             android:textSize="16sp" />
-
     </LinearLayout>
 
-
-
-    <!-- Bottom compact cards (moved up) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="183dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
-
-        <!-- Auto-start -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -172,7 +159,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" />
-
             </HorizontalScrollView>
 
             <Button
@@ -184,10 +170,8 @@
                 android:text="Pick Apps"
                 android:textAllCaps="false"
                 android:textColor="@color/text_main" />
-
         </LinearLayout>
 
-        <!-- Quick tools -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -225,38 +209,32 @@
                 android:text="Settings"
                 android:textAllCaps="false"
                 android:textColor="@color/text_main" />
-
         </LinearLayout>
-
     </LinearLayout>
 
-
-
-    <!-- Ad -->
     <FrameLayout
         android:id="@+id/adContainer"
         android:layout_width="match_parent"
         android:layout_height="88dp"
         android:layout_marginTop="4dp" />
-    <!-- Hidden old views still needed by code -->
-    <!-- Hidden old views still needed by code binding -->
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchShowUnlock"
             android:layout_width="0dp"
             android:layout_height="0dp" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchDoubleTap"
             android:layout_width="0dp"
             android:layout_height="0dp" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchRequirePin"
             android:layout_width="0dp"
             android:layout_height="0dp" />
@@ -310,7 +288,6 @@
             android:id="@+id/btnOpenSupport"
             android:layout_width="0dp"
             android:layout_height="0dp" />
-
     </LinearLayout>
 
 </LinearLayout>

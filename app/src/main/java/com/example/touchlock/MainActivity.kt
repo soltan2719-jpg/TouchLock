@@ -1,72 +1,54 @@
 package com.example.touchlock
 
 import android.Manifest
-import android.app.AppOpsManager
+import android.annotation.SuppressLint
+import android.app.usage.UsageStatsManager
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.APP_OPS_SERVICE
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.example.touchlock.databinding.ActivityMainBinding
-import android.view.View
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.EditText
-import androidx.appcompat.widget.SwitchCompat
-import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
 
-
-    private lateinit var billing: BillingManager
-
     private lateinit var binding: ActivityMainBinding
+    private lateinit var billing: BillingManager
 
     private var adView: AdView? = null
 
     private var installedApps: List<AppInfo> = emptyList()
     private val selectedPackages = mutableSetOf<String>()
-    private fun setupBannerAd() {
 
-        if (Prefs.isPremium(this)) {
-
-            binding.adContainer.visibility = View.GONE
-            return
+    // Receiver to update UI when the Service locks or unlocks
+    private val statusReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            updateUIBasedOnService()
         }
-
-        binding.adContainer.visibility = View.VISIBLE
-
-        adView?.destroy()
-
-        adView = AdView(this).apply {
-            adUnitId = "ca-app-pub-3940256099942544/6300978111"
-            setAdSize(AdSize.BANNER)
-        }
-
-        binding.adContainer.removeAllViews()
-        binding.adContainer.addView(adView)
-
-        val adRequest = AdRequest.Builder().build()
-
-        adView?.loadAd(adRequest)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         requestNotificationPermissionIfNeeded()
 
@@ -79,17 +61,22 @@ class MainActivity : AppCompatActivity() {
         updateSelectedAppsText()
         updatePremiumText()
 
-        billing = BillingManager(this, this)
+        billing = BillingManager(
+            context = this,
+            activity = this
+        )
         billing.start()
 
         MobileAds.initialize(this)
         setupBannerAd()
+        updateAdVisibility()
+
         binding.btnGrantOverlay.setOnClickListener {
             openOverlayPermission()
         }
 
         binding.btnGrantUsageAccess.setOnClickListener {
-            openUsageAccessSettings()
+            requestUsageStatsPermission()
         }
 
         binding.btnPickApps.setOnClickListener {
@@ -97,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnOpenSettings.setOnClickListener {
-            Toast.makeText(this, "Settings screen coming soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         binding.btnOpenSupport.setOnClickListener {
@@ -108,17 +95,24 @@ class MainActivity : AppCompatActivity() {
             saveSettings()
         }
 
+        // Updated Toggle Logic: If showing, STOP. If not showing, START.
         binding.btnStartLockNow.setOnClickListener {
-            if (!saveSettings()) return@setOnClickListener
-            if (!checkOverlayPermission()) return@setOnClickListener
+            if (TouchLockService.isOverlayShowing) {
+                val intent = Intent(this, TouchLockService::class.java).apply {
+                    action = TouchLockService.ACTION_STOP_ALL
+                }
+                startTouchLockService(intent)
+                Toast.makeText(this, "Unlocking...", Toast.LENGTH_SHORT).show()
+            } else {
+                if (!saveSettings()) return@setOnClickListener
+                if (!checkOverlayPermission()) return@setOnClickListener
 
-            val intent = Intent(this, TouchLockService::class.java).apply {
-                action = TouchLockService.ACTION_START_LOCK_NOW
+                val intent = Intent(this, TouchLockService::class.java).apply {
+                    action = TouchLockService.ACTION_START_LOCK_NOW
+                }
+                startTouchLockService(intent)
+                Toast.makeText(this, "Touch lock started", Toast.LENGTH_SHORT).show()
             }
-            startTouchLockService(intent)
-            Toast.makeText(this, "Touch lock started", Toast.LENGTH_SHORT).show()
-            binding.btnStartLockNow.text = getString(R.string.unlock)
-            binding.txtSubtitle.text = getString(R.string.protection_active)
         }
 
         binding.btnStartMonitor.setOnClickListener {
@@ -129,11 +123,13 @@ class MainActivity : AppCompatActivity() {
 
             if (!saveSettings()) return@setOnClickListener
             if (!checkOverlayPermission()) return@setOnClickListener
-            if (!checkUsageAccessPermission()) {
+
+            if (!hasUsageAccess()) {
                 Toast.makeText(this, "Please allow Usage Access first", Toast.LENGTH_SHORT).show()
-                openUsageAccessSettings()
+                requestUsageStatsPermission()
                 return@setOnClickListener
             }
+
             if (selectedPackages.isEmpty()) {
                 Toast.makeText(this, "Please choose at least one app", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -143,6 +139,7 @@ class MainActivity : AppCompatActivity() {
                 action = TouchLockService.ACTION_START_MONITOR
             }
             startTouchLockService(intent)
+
             Toast.makeText(this, "Monitor mode started", Toast.LENGTH_SHORT).show()
         }
 
@@ -152,8 +149,6 @@ class MainActivity : AppCompatActivity() {
             }
             startTouchLockService(intent)
             Toast.makeText(this, "Stopped", Toast.LENGTH_SHORT).show()
-            binding.btnStartLockNow.text = getString(R.string.lock_now)
-            binding.txtSubtitle.text = getString(R.string.touchlock_ready)
         }
 
         binding.btnPremium.setOnClickListener {
@@ -173,13 +168,112 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter("com.example.touchlock.STATUS_CHANGED")
+
+        // This fix handles the security requirement for Android 13+ (API 33+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(statusReceiver, filter, RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(statusReceiver, filter)
+        }
+        updateUIBasedOnService()
+    }
+
     override fun onResume() {
         super.onResume()
         updatePermissionStatus()
+        updatePremiumText()
+        updateAdVisibility()
+        updateUIBasedOnService()
+
+        if (::billing.isInitialized) {
+            billing.checkPremium {
+                runOnUiThread {
+                    updatePremiumText()
+                    updateAdVisibility()
+                }
+            }
+        }
     }
+
+    override fun onStop() {
+        super.onStop()
+        try {
+            unregisterReceiver(statusReceiver)
+        } catch (_: Exception) {
+            // Already unregistered
+        }
+    }
+
+    private fun updateUIBasedOnService() {
+        if (TouchLockService.isOverlayShowing) {
+            binding.btnStartLockNow.text = getString(R.string.unlock)
+            binding.txtSubtitle.text = getString(R.string.protection_active)
+        } else {
+            binding.btnStartLockNow.text = getString(R.string.lock_now)
+            binding.txtSubtitle.text = getString(R.string.touchlock_ready)
+        }
+    }
+
+    private fun requestUsageStatsPermission() {
+        if (!hasUsageAccess()) {
+            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
+                data = "package:$packageName".toUri()
+            }
+            try {
+                startActivity(intent)
+            } catch (_: Exception) {
+                startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+            }
+            Toast.makeText(this, "Find TouchLock and allow Usage Access", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Usage Access already granted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onDestroy() {
         adView?.destroy()
+        if (::billing.isInitialized) {
+            billing.endConnection()
+        }
         super.onDestroy()
+    }
+
+    private fun setupBannerAd() {
+        if (Prefs.isPremium(this)) {
+            binding.adContainer.visibility = View.GONE
+            return
+        }
+
+        binding.adContainer.visibility = View.VISIBLE
+        adView?.destroy()
+
+        adView = AdView(this).apply {
+            adUnitId = "ca-app-pub-3940256099942544/6300978111"
+            setAdSize(AdSize.BANNER)
+        }
+
+        binding.adContainer.removeAllViews()
+        binding.adContainer.addView(adView)
+
+        val adRequest = AdRequest.Builder().build()
+        adView?.loadAd(adRequest)
+    }
+
+    private fun updateAdVisibility() {
+        if (Prefs.isPremium(this)) {
+            binding.adContainer.visibility = View.GONE
+        } else {
+            binding.adContainer.visibility = View.VISIBLE
+            if (adView == null) {
+                setupBannerAd()
+            } else {
+                adView?.loadAd(AdRequest.Builder().build())
+            }
+        }
     }
 
     private fun updatePremiumText() {
@@ -192,71 +286,6 @@ class MainActivity : AppCompatActivity() {
             binding.btnPremium.isEnabled = true
             binding.adContainer.visibility = View.VISIBLE
         }
-
-    }
-
-    private fun showSettingsDialog() {
-        val view = layoutInflater.inflate(R.layout.dialog_settings, null)
-
-        val switchShowUnlock = view.findViewById<SwitchCompat>(R.id.dialogSwitchShowUnlock)
-        val switchDoubleTap = view.findViewById<SwitchCompat>(R.id.dialogSwitchDoubleTap)
-        val switchRequirePin = view.findViewById<SwitchCompat>(R.id.dialogSwitchRequirePin)
-        val edtPin = view.findViewById<EditText>(R.id.dialogEdtPin)
-        val edtDelay = view.findViewById<EditText>(R.id.dialogEdtDelay)
-
-        switchShowUnlock.isChecked = Prefs.isShowUnlockButton(this)
-        switchDoubleTap.isChecked = Prefs.isDoubleTapEnabled(this)
-        switchRequirePin.isChecked = Prefs.isPinRequired(this)
-        edtPin.setText(Prefs.getPin(this))
-        edtDelay.setText(Prefs.getAutoLockDelay(this).toString())
-
-        AlertDialog.Builder(this)
-            .setView(view)
-            .setPositiveButton("Save") { _, _ ->
-                val pin = edtPin.text.toString().trim()
-                val delay = edtDelay.text.toString().trim().toIntOrNull() ?: 0
-
-                Prefs.setShowUnlockButton(this, switchShowUnlock.isChecked)
-                Prefs.setDoubleTapEnabled(this, switchDoubleTap.isChecked)
-                Prefs.setPinRequired(this, switchRequirePin.isChecked)
-                Prefs.setPin(this, pin)
-                Prefs.setAutoLockDelay(this, delay)
-
-                loadSettings()
-                Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun showSupportDialog() {
-        val view = layoutInflater.inflate(R.layout.dialog_support, null)
-
-        val btnPremium = view.findViewById<Button>(R.id.dialogBtnPremium)
-        val btnTip1 = view.findViewById<Button>(R.id.dialogBtnTip1)
-        val btnTip2 = view.findViewById<Button>(R.id.dialogBtnTip2)
-        val btnTip5 = view.findViewById<Button>(R.id.dialogBtnTip5)
-
-        btnPremium.setOnClickListener {
-            billing.buyPremium()
-        }
-
-        btnTip1.setOnClickListener {
-            billing.buyTip1()
-        }
-
-        btnTip2.setOnClickListener {
-            billing.buyTip2()
-        }
-
-        btnTip5.setOnClickListener {
-            billing.buyTip5()
-        }
-
-        AlertDialog.Builder(this)
-            .setView(view)
-            .setNegativeButton("Close", null)
-            .show()
     }
 
     private fun loadSettings() {
@@ -287,28 +316,22 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updatePermissionStatus() {
         val overlayGranted = Settings.canDrawOverlays(this)
         val usageGranted = hasUsageAccess()
+        val batteryIgnored = isBatteryOptimizationDisabled()
 
-        binding.txtSystemStatus.text =
-            if (Settings.canDrawOverlays(this)) "Ready"
-            else "Needs permission"
-
+        binding.txtSystemStatus.text = if (overlayGranted) "Ready" else "Needs permission"
         binding.txtSystemStatus.setTextColor(
-            ContextCompat.getColor(
-                this,
-                if (Settings.canDrawOverlays(this)) R.color.success else R.color.warning
-            )
+            ContextCompat.getColor(this, if (overlayGranted) R.color.success else R.color.warning)
         )
 
-        binding.txtOverlayStatus.text =
-            if (overlayGranted) "Overlay permission: Granted"
-            else "Overlay permission: Not granted"
+        binding.txtOverlayStatus.text = if (overlayGranted) "Overlay permission: Granted" else "Overlay permission: Not granted"
 
-        binding.txtUsageStatus.text =
-            if (usageGranted) "Usage access: Granted"
-            else "Usage access: Not granted"
+        val usageText = if (usageGranted) "Usage: Granted" else "Usage: Not granted"
+        val batteryText = if (batteryIgnored) "Battery: Unrestricted" else "Battery: Optimized"
+        binding.txtUsageStatus.text = "$usageText | $batteryText"
     }
 
     private fun checkOverlayPermission(): Boolean {
@@ -320,75 +343,52 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun checkUsageAccessPermission(): Boolean {
-        return hasUsageAccess()
-    }
-
     private fun openOverlayPermission() {
-        val intent = Intent(
-            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.parse("package:$packageName")
-        )
-        startActivity(intent)
-    }
-
-    private fun openUsageAccessSettings() {
-        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            "package:$packageName".toUri())
         startActivity(intent)
     }
 
     private fun hasUsageAccess(): Boolean {
-        val appOps = getSystemService(APP_OPS_SERVICE) as AppOpsManager
-        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appOps.unsafeCheckOpNoThrow(
-                AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(),
-                packageName
-            )
+        val statsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
+        val currentTime = System.currentTimeMillis()
+        val stats = statsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            currentTime - 1000 * 10,
+            currentTime
+        )
+        return stats != null && stats.isNotEmpty()
+    }
+
+    private fun isBatteryOptimizationDisabled(): Boolean {
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pm.isIgnoringBatteryOptimizations(packageName)
         } else {
-            @Suppress("DEPRECATION")
-            appOps.checkOpNoThrow(
-                AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(),
-                packageName
-            )
+            true
         }
-        return mode == AppOpsManager.MODE_ALLOWED
     }
 
     private fun requestNotificationPermissionIfNeeded() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 2001)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 2001)
+            }
         }
     }
 
     private fun startTouchLockService(intent: Intent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ContextCompat.startForegroundService(this, intent)
-        } else {
-            startService(intent)
-        }
+        ContextCompat.startForegroundService(this, intent)
     }
 
     private fun loadLaunchableApps(): List<AppInfo> {
         val launcherIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
-
-        val resolved = packageManager.queryIntentActivities(
-            launcherIntent,
-            PackageManager.MATCH_ALL
-        )
-
-        return resolved
-            .map {
-                AppInfo(
-                    label = it.loadLabel(packageManager).toString(),
-                    packageName = it.activityInfo.packageName
-                )
-            }
-            .distinctBy { it.packageName }
-            .sortedBy { it.label.lowercase() }
+        val resolved = packageManager.queryIntentActivities(launcherIntent, PackageManager.MATCH_ALL)
+        return resolved.map {
+            AppInfo(label = it.loadLabel(packageManager).toString(), packageName = it.activityInfo.packageName)
+        }.distinctBy { it.packageName }.sortedBy { it.label.lowercase() }
     }
 
     private fun showAppPickerDialog() {
@@ -396,7 +396,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "No apps found", Toast.LENGTH_SHORT).show()
             return
         }
-
         val labels = installedApps.map { "${it.label}\n${it.packageName}" }.toTypedArray()
         val checked = installedApps.map { selectedPackages.contains(it.packageName) }.toBooleanArray()
 
@@ -416,7 +415,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSelectedAppsText() {
         binding.chipsContainer.removeAllViews()
-
         if (selectedPackages.isEmpty()) {
             binding.txtSelectedApps.text = getString(R.string.selected_apps_none)
             binding.scrollSelectedApps.visibility = View.GONE
@@ -424,7 +422,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val selectedApps = installedApps.filter { selectedPackages.contains(it.packageName) }
-
         binding.txtSelectedApps.text = getString(R.string.apps_selected_for_autostart)
         binding.scrollSelectedApps.visibility = View.VISIBLE
 
@@ -436,17 +433,18 @@ class MainActivity : AppCompatActivity() {
                 setBackgroundResource(R.drawable.bg_app_chip)
                 setPadding(28, 16, 28, 16)
             }
-
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-
-            if (index > 0) {
-                params.marginStart = 12
-            }
-
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            if (index > 0) params.marginStart = 12
             binding.chipsContainer.addView(chip, params)
         }
+    }
+
+    private fun showSupportDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_support, null)
+        view.findViewById<Button>(R.id.dialogBtnPremium).setOnClickListener { billing.buyPremium() }
+        view.findViewById<Button>(R.id.dialogBtnTip1).setOnClickListener { billing.buyTip1() }
+        view.findViewById<Button>(R.id.dialogBtnTip2).setOnClickListener { billing.buyTip2() }
+        view.findViewById<Button>(R.id.dialogBtnTip5).setOnClickListener { billing.buyTip5() }
+        AlertDialog.Builder(this).setView(view).setNegativeButton("Close", null).show()
     }
 }

@@ -70,4 +70,13 @@
         android:textColor="@color/text_main"
         android:textColorHint="@color/text_secondary" />
 
+    <Button
+        android:id="@+id/btnPremium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Upgrade to Premium"
+        android:background="@drawable/bg_secondary_button"
+        android:textColor="@color/text_main" />
+
 </LinearLayout>
