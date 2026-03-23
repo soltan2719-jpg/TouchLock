@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/card_bg"
@@ -9,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Protection Settings"
+        android:text="@string/protection_settings"
         android:textColor="@color/text_main"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -19,22 +20,71 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="Show unlock button"
-        android:textColor="@color/text_main" />
+        android:text="@string/show_unlock_button"
+        android:textColor="@color/text_main"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
         android:id="@+id/dialogSwitchDoubleTap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enable double tap unlock"
-        android:textColor="@color/text_main" />
+        android:text="@string/enable_double_tap_unlock"
+        android:textColor="@color/text_main"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
         android:id="@+id/dialogSwitchRequirePin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Require PIN to unlock"
-        android:textColor="@color/text_main" />
+        android:text="@string/require_pin_to_unlock"
+        android:textColor="@color/text_main"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/dialogSwitchKeepScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/keep_screen_on_while_locked"
+        android:textColor="@color/text_main"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <!-- NEW: Shake Sensitivity Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Shake Sensitivity"
+        android:textColor="@color/text_main"
+        android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/dialogSeekShake"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:max="20"
+        android:progress="10" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hard Shake"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="Light Shake"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -75,8 +125,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Upgrade to Premium"
         android:background="@drawable/bg_secondary_button"
+        android:text="Upgrade to Premium"
+        android:textColor="@color/text_main" />
+
+    <Button
+        android:id="@+id/btnSaveSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_circle_primary"
+        android:text="Save Settings"
         android:textColor="@color/text_main" />
 
 </LinearLayout>

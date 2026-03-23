@@ -6,14 +6,17 @@ object Prefs {
 
     private const val PREF_NAME = "touchlock_prefs"
 
+    // Keys
     private const val KEY_PREMIUM = "premium"
-
     private const val KEY_SHOW_UNLOCK_BUTTON = "show_unlock_button"
     private const val KEY_ENABLE_DOUBLE_TAP = "enable_double_tap"
     private const val KEY_REQUIRE_PIN = "require_pin"
     private const val KEY_PIN = "pin"
     private const val KEY_AUTO_LOCK_DELAY = "auto_lock_delay"
     private const val KEY_SELECTED_PACKAGES = "selected_packages"
+    private const val KEY_SHAKE_THRESHOLD = "shake_threshold"
+    private const val KEY_MONITOR_ENABLED = "monitor_enabled"
+    private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
 
     private fun prefs(context: Context) =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -28,7 +31,7 @@ object Prefs {
         prefs(context).edit().putBoolean(KEY_PREMIUM, value).apply()
     }
 
-    // ---------- NORMAL SETTINGS ----------
+    // ---------- SETTINGS ----------
 
     fun isShowUnlockButton(context: Context): Boolean =
         prefs(context).getBoolean(KEY_SHOW_UNLOCK_BUTTON, true)
@@ -37,8 +40,17 @@ object Prefs {
         prefs(context).edit().putBoolean(KEY_SHOW_UNLOCK_BUTTON, value).apply()
     }
 
+    fun getShakeThreshold(context: Context): Float {
+        // Default is 12.0f. Lower = more sensitive, Higher = less sensitive.
+        return prefs(context).getFloat(KEY_SHAKE_THRESHOLD, 12.0f)
+    }
+
+    fun setShakeThreshold(context: Context, value: Float) {
+        prefs(context).edit().putFloat(KEY_SHAKE_THRESHOLD, value).apply()
+    }
+
     fun isDoubleTapEnabled(context: Context): Boolean =
-        prefs(context).getBoolean(KEY_ENABLE_DOUBLE_TAP, true)
+        prefs(context).getBoolean(KEY_ENABLE_DOUBLE_TAP, false)
 
     fun setDoubleTapEnabled(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_ENABLE_DOUBLE_TAP, value).apply()
@@ -71,4 +83,18 @@ object Prefs {
     fun setSelectedPackages(context: Context, values: Set<String>) {
         prefs(context).edit().putStringSet(KEY_SELECTED_PACKAGES, values).apply()
     }
+
+    fun setMonitorEnabled(context: Context, enabled: Boolean) {
+        prefs(context).edit().putBoolean(KEY_MONITOR_ENABLED, enabled).apply()
+    }
+
+    fun isMonitorEnabled(context: Context): Boolean {
+        return prefs(context).getBoolean(KEY_MONITOR_ENABLED, false)
+    }
+
+    fun isKeepScreenOn(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_KEEP_SCREEN_ON, false)
+
+    fun setKeepScreenOn(context: Context, enabled: Boolean) =
+        prefs(context).edit().putBoolean(KEY_KEEP_SCREEN_ON, enabled).apply()
 }

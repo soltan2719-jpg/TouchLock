@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
@@ -29,6 +30,13 @@
 
         <!-- Activities -->
         <activity
+            android:name=".CollapseActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            android:taskAffinity=""
+            android:excludeFromRecents="true" />
+
+        <activity
             android:name=".PremiumActivity"
             android:exported="false" />
 
@@ -45,6 +53,17 @@
             </intent-filter>
         </activity>
 
+        <!-- FIXED: exported must be true to receive system boot signal -->
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
         <!-- Main Touch Lock Service -->
         <service
             android:name=".TouchLockService"
@@ -56,7 +75,7 @@
                 android:value="Touch lock overlay and system interaction" />
         </service>
 
-        <!-- NEW: Quick Settings Tile Service -->
+        <!-- Quick Settings Tile Service -->
         <service
             android:name=".TouchTileService"
             android:exported="true"

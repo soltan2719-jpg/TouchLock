@@ -13,4 +13,10 @@
     <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="premium_already_have">You already have Premium</string>
     <string name="premium_not_active">Premium not active</string>
+    <string name="ready">Ready</string>
+    <string name="protection_settings">Protection Settings</string>
+    <string name="show_unlock_button">Show unlock button</string>
+    <string name="enable_double_tap_unlock">Enable double tap unlock</string>
+    <string name="require_pin_to_unlock">Require PIN to unlock</string>
+    <string name="keep_screen_on_while_locked">Keep screen on while locked</string>
 </resources>

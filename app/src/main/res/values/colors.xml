@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bg_main">#0B1020</color>
-    <color name="card_bg">#151C2E</color>
+    <color name="card_bg">#151C2E</color> <!-- Keep this one -->
     <color name="card_bg_2">#1A2238</color>
     <color name="primary_blue">#5B8CFF</color>
     <color name="primary_blue_dark">#4676E8</color>
@@ -11,4 +11,6 @@
     <color name="danger">#FF6B6B</color>
     <color name="warning">#FFC857</color>
     <color name="divider_soft">#2A3552</color>
+    <color name="active_blue">#2196F3</color>
+    <!-- Line 15 was deleted because it was a duplicate -->
 </resources>

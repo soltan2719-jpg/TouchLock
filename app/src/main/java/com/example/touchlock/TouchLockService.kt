@@ -39,6 +39,7 @@ class TouchLockService : Service() {
         const val ACTION_START_LOCK_NOW = "com.example.touchlock.START_LOCK_NOW"
         const val ACTION_START_MONITOR = "com.example.touchlock.START_MONITOR"
         const val ACTION_STOP_ALL = "com.example.touchlock.STOP_ALL"
+        const val ACTION_UPDATE_SETTINGS = "com.example.touchlock.UPDATE_SETTINGS"
 
         private const val CHANNEL_ID = "touch_lock_channel"
         private const val NOTIFICATION_ID = 101
@@ -69,6 +70,7 @@ class TouchLockService : Service() {
     private var currentAcceleration = 0f
     private var lastAcceleration = 0f
 
+    private var tapCount = 0
     private var lastTapTime = 0L
     private var unlockCooldownUntil = 0L
 
@@ -83,8 +85,7 @@ class TouchLockService : Service() {
                         startLockWithDelay()
                     }
                 }
-            } catch (_: Exception) {
-            }
+            } catch (_: Exception) {}
 
             if (isMonitoring) {
                 handler.postDelayed(this, 1000)
@@ -99,8 +100,6 @@ class TouchLockService : Service() {
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         createNotificationChannel()
-
-        // Initialize Shake Sensor
         setupShakeSensor()
     }
 
@@ -124,8 +123,8 @@ class TouchLockService : Service() {
             val delta = currentAcceleration - lastAcceleration
             acceleration = acceleration * 0.9f + delta
 
-            // If shake is strong enough and screen is NOT already locked
-            if (acceleration > 12 && !isOverlayShowing) {
+            val threshold = Prefs.getShakeThreshold(this@TouchLockService)
+            if (acceleration > threshold && !isOverlayShowing) {
                 startLockWithDelay()
             }
         }
@@ -145,13 +144,21 @@ class TouchLockService : Service() {
 
         when (intent?.action) {
             ACTION_START_LOCK_NOW -> {
+                isRunning = true
                 isMonitoring = false
                 handler.removeCallbacks(monitorRunnable)
                 startLockWithDelay()
             }
             ACTION_START_MONITOR -> startMonitorMode()
             ACTION_STOP_ALL -> stopAll()
-            else -> startMonitorMode()
+            ACTION_UPDATE_SETTINGS -> {
+                if (isOverlayShowing) {
+                    refreshOverlayUI()
+                }
+            }
+            else -> {
+                if (!isRunning) startMonitorMode()
+            }
         }
 
         return START_STICKY
@@ -163,6 +170,7 @@ class TouchLockService : Service() {
         updateNotification()
         handler.removeCallbacks(monitorRunnable)
         handler.post(monitorRunnable)
+        sendStatusBroadcast()
     }
 
     private fun startLockWithDelay() {
@@ -187,14 +195,11 @@ class TouchLockService : Service() {
                 setBackgroundColor(Color.parseColor("#DD111111"))
             }
 
-            addView(
-                text,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER
-                )
-            )
+            addView(text, FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER
+            ))
         }
 
         val params = WindowManager.LayoutParams(
@@ -229,21 +234,28 @@ class TouchLockService : Service() {
                     showTouchFeedback(event.rawX, event.rawY)
                 }
 
-                if (Prefs.isDoubleTapEnabled(this@TouchLockService) &&
-                    event.action == MotionEvent.ACTION_UP
-                ) {
-                    handleDoubleTap()
+                if (event.action == MotionEvent.ACTION_UP) {
+                    val isDoubleTapOn = Prefs.isDoubleTapEnabled(this@TouchLockService)
+                    if (isDoubleTapOn) {
+                        handleDoubleTap()
+                    }
                 }
                 true
             }
+        }
+
+        var flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+
+        if (Prefs.isKeepScreenOn(this)) {
+            flags = flags or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
         }
 
         val overlayParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
             overlayType,
-            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            flags,
             PixelFormat.TRANSLUCENT
         )
         overlayParams.gravity = Gravity.TOP or Gravity.START
@@ -278,11 +290,26 @@ class TouchLockService : Service() {
         if (Prefs.isShowUnlockButton(this)) {
             addUnlockButton(overlayType)
         }
+        sendStatusBroadcast()
+    }
+
+    private fun refreshOverlayUI() {
+        // Remove existing dynamic views
+        try { unlockButton?.let { windowManager.removeView(it) } } catch (_: Exception) {}
+        unlockButton = null
+        removeInfoOverlay()
+
+        val overlayType = getOverlayType()
+        
+        // Add updated views
+        addBottomHint(overlayType)
+        if (Prefs.isShowUnlockButton(this)) {
+            addUnlockButton(overlayType)
+        }
     }
 
     private fun showTouchFeedback(x: Float, y: Float) {
         val view = touchFeedbackView ?: return
-
         val params = view.layoutParams as WindowManager.LayoutParams
         params.x = x.toInt() - 50
         params.y = y.toInt() - 100
@@ -292,10 +319,7 @@ class TouchLockService : Service() {
 
         view.animate().cancel()
         view.alpha = 0.8f
-        view.animate()
-            .alpha(0f)
-            .setDuration(1000)
-            .start()
+        view.animate().alpha(0f).setDuration(1000).start()
     }
 
     private fun addBottomHint(overlayType: Int) {
@@ -338,17 +362,14 @@ class TouchLockService : Service() {
             setPadding(30, 20, 30, 20)
             setBackgroundColor(Color.parseColor("#CC111111"))
             setTextColor(Color.WHITE)
-
-            setOnClickListener {
-                requestUnlock()
-            }
+            setOnClickListener { requestUnlock() }
         }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
             overlayType,
-            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
             PixelFormat.TRANSLUCENT
         )
         params.gravity = Gravity.TOP or Gravity.END
@@ -362,9 +383,16 @@ class TouchLockService : Service() {
     private fun handleDoubleTap() {
         val now = System.currentTimeMillis()
         if (now - lastTapTime < 300) {
-            requestUnlock()
+            tapCount++
+        } else {
+            tapCount = 1
         }
         lastTapTime = now
+
+        if (tapCount == 2) {
+            tapCount = 0
+            requestUnlock()
+        }
     }
 
     private fun requestUnlock() {
@@ -377,70 +405,41 @@ class TouchLockService : Service() {
 
     private fun showPinOverlay() {
         if (pinOverlay != null) return
-
         val overlayType = getOverlayType()
-
-        val root = FrameLayout(this).apply {
-            setBackgroundColor(Color.parseColor("#77000000"))
-        }
-
+        val root = FrameLayout(this).apply { setBackgroundColor(Color.parseColor("#77000000")) }
         val card = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(50, 50, 50, 50)
             setBackgroundColor(Color.parseColor("#FF1A1A1A"))
         }
-
         val title = TextView(this).apply {
             text = "Enter PIN to unlock"
             textSize = 20f
             setTextColor(Color.WHITE)
         }
-
         val input = EditText(this).apply {
             hint = "PIN"
             setHintTextColor(Color.parseColor("#AAAAAA"))
             setTextColor(Color.WHITE)
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
         }
-
         val info = TextView(this).apply {
             text = ""
             textSize = 14f
             setTextColor(Color.RED)
         }
-
-        val row = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-        }
-
+        val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         val btnCancel = Button(this).apply { text = "Cancel" }
         val btnUnlock = Button(this).apply { text = "Unlock" }
 
-        row.addView(
-            btnCancel,
-            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        )
-        row.addView(
-            btnUnlock,
-            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        )
-
-        card.addView(title)
-        card.addView(input)
-        card.addView(info)
-        card.addView(row)
-
-        root.addView(
-            card,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.CENTER
-            ).apply {
-                leftMargin = 50
-                rightMargin = 50
-            }
-        )
+        row.addView(btnCancel, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        row.addView(btnUnlock, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        card.addView(title); card.addView(input); card.addView(info); card.addView(row)
+        root.addView(card, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            Gravity.CENTER
+        ).apply { leftMargin = 50; rightMargin = 50 })
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -451,10 +450,8 @@ class TouchLockService : Service() {
         )
         params.gravity = Gravity.CENTER
         params.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-
         windowManager.addView(root, params)
         pinOverlay = root
-
         input.requestFocus()
 
         handler.postDelayed({
@@ -462,15 +459,9 @@ class TouchLockService : Service() {
             imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
         }, 200)
 
-        btnCancel.setOnClickListener {
-            removePinOverlay()
-        }
-
+        btnCancel.setOnClickListener { removePinOverlay() }
         btnUnlock.setOnClickListener {
-            val entered = input.text.toString().trim()
-            val realPin = Prefs.getPin(this)
-
-            if (entered == realPin) {
+            if (input.text.toString().trim() == Prefs.getPin(this)) {
                 unlockOverlayOnly()
             } else {
                 info.text = "Wrong PIN"
@@ -480,26 +471,21 @@ class TouchLockService : Service() {
 
     private fun unlockOverlayOnly() {
         if (lockOverlay == null) return
+        lockOverlay?.animate()?.alpha(0f)?.setDuration(300)?.withEndAction {
+            removeOverlayViews()
+            removePinOverlay()
+            unlockCooldownUntil = System.currentTimeMillis() + 5000
+            isOverlayShowing = false
+            isRunning = isMonitoring
+            updateNotification()
+            sendStatusBroadcast()
 
-        // Step 4: Smooth Fade-out Animation
-        lockOverlay?.animate()
-            ?.alpha(0f)
-            ?.setDuration(300)
-            ?.withEndAction {
-                removeOverlayViews()
-                removePinOverlay()
-                unlockCooldownUntil = System.currentTimeMillis() + 5000
-                isOverlayShowing = false
-                isRunning = isMonitoring
-                updateNotification()
-
-                if (!isMonitoring) {
-                    stopForeground(STOP_FOREGROUND_REMOVE)
-                    stopSelf()
-                    isRunning = false
-                }
+            if (!isMonitoring) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                stopSelf()
+                isRunning = false
             }
-            ?.start()
+        }?.start()
     }
 
     private fun stopAll() {
@@ -511,80 +497,44 @@ class TouchLockService : Service() {
         removePinOverlay()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
+        sendStatusBroadcast()
     }
 
     private fun removeOverlayViews() {
-        try {
-            lockOverlay?.let { windowManager.removeView(it) }
-        } catch (_: Exception) {
-        }
+        try { lockOverlay?.let { windowManager.removeView(it) } } catch (_: Exception) {}
         lockOverlay = null
-
-        try {
-            touchFeedbackView?.let { windowManager.removeView(it) }
-        } catch (_: Exception) {
-        }
+        try { touchFeedbackView?.let { windowManager.removeView(it) } } catch (_: Exception) {}
         touchFeedbackView = null
-
-        try {
-            unlockButton?.let { windowManager.removeView(it) }
-        } catch (_: Exception) {
-        }
+        try { unlockButton?.let { windowManager.removeView(it) } } catch (_: Exception) {}
         unlockButton = null
-
         removeInfoOverlay()
     }
 
     private fun removeInfoOverlay() {
-        try {
-            infoOverlay?.let { windowManager.removeView(it) }
-        } catch (_: Exception) {
-        }
+        try { infoOverlay?.let { windowManager.removeView(it) } } catch (_: Exception) {}
         infoOverlay = null
     }
 
     private fun removePinOverlay() {
-        try {
-            pinOverlay?.let { windowManager.removeView(it) }
-        } catch (_: Exception) {
-        }
+        try { pinOverlay?.let { windowManager.removeView(it) } } catch (_: Exception) {}
         pinOverlay = null
     }
 
     private fun getForegroundPackage(): String? {
         val end = System.currentTimeMillis()
-        val begin = end - 10_000L
-        val stats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
-            begin,
-            end
-        )
-
+        val stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, end - 10000L, end)
         if (stats.isNullOrEmpty()) return null
-
-        val recent = stats.maxByOrNull { it.lastTimeUsed } ?: return null
-        return recent.packageName
+        return stats.maxByOrNull { it.lastTimeUsed }?.packageName
     }
 
     private fun buildNotification(): Notification {
-        val stopIntent = Intent(this, TouchLockService::class.java).apply {
-            action = ACTION_STOP_ALL
-        }
+        val stopPendingIntent = PendingIntent.getService(this, 0,
+            Intent(this, TouchLockService::class.java).apply { action = ACTION_STOP_ALL },
+            PendingIntent.FLAG_UPDATE_CURRENT or pendingIntentImmutableFlag())
 
-        val stopPendingIntent = PendingIntent.getService(
-            this,
-            0,
-            stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or pendingIntentImmutableFlag()
-        )
-
-        val openAppIntent = Intent(this, MainActivity::class.java)
-        val openPendingIntent = PendingIntent.getActivity(
-            this,
-            1,
-            openAppIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or pendingIntentImmutableFlag()
-        )
+        val openPendingIntent = PendingIntent.getActivity(this, 1,
+            Intent(this, MainActivity::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT or pendingIntentImmutableFlag())
 
         val text = when {
             isMonitoring && isOverlayShowing -> "Monitoring selected apps • Touch lock active"
@@ -610,36 +560,24 @@ class TouchLockService : Service() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Touch Lock",
-                NotificationManager.IMPORTANCE_LOW
-            )
+            val channel = NotificationChannel(CHANNEL_ID, "Touch Lock", NotificationManager.IMPORTANCE_LOW)
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
         }
     }
 
     private fun getOverlayType(): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        else WindowManager.LayoutParams.TYPE_PHONE
     }
 
     private fun pendingIntentImmutableFlag(): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.FLAG_IMMUTABLE
-        } else {
-            0
-        }
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
     }
 
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null)
-        sensorManager?.unregisterListener(sensorListener) // Step 3 cleanup
+        sensorManager?.unregisterListener(sensorListener)
         removeOverlayViews()
         removePinOverlay()
         isRunning = false
@@ -647,8 +585,10 @@ class TouchLockService : Service() {
         isOverlayShowing = false
         super.onDestroy()
     }
+
     private fun sendStatusBroadcast() {
         val intent = Intent("com.example.touchlock.STATUS_CHANGED")
+        intent.setPackage(packageName)
         sendBroadcast(intent)
     }
 }
