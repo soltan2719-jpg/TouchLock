@@ -19,6 +19,9 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.text.InputType
 import android.view.Gravity
 import android.view.MotionEvent
@@ -74,6 +77,39 @@ class TouchLockService : Service() {
     private var lastTapTime = 0L
     private var unlockCooldownUntil = 0L
 
+    private val hideControlsRunnable = Runnable {
+        fadeView(unlockButton, if (Prefs.isInvisibleUnlockButton(this)) 0.01f else 0f)
+        fadeView(infoOverlay, 0f)
+    }
+
+    private fun showControls() {
+        handler.removeCallbacks(hideControlsRunnable)
+        fadeView(unlockButton, 1f)
+        fadeView(infoOverlay, 1f)
+        handler.postDelayed(hideControlsRunnable, 3000)
+    }
+
+    private fun fadeView(view: View?, targetAlpha: Float) {
+        view?.animate()?.alpha(targetAlpha)?.setDuration(500)?.start()
+    }
+
+    private fun triggerHapticFeedback() {
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(50)
+        }
+    }
+
     private val monitorRunnable = object : Runnable {
         override fun run() {
             try {
@@ -125,6 +161,7 @@ class TouchLockService : Service() {
 
             val threshold = Prefs.getShakeThreshold(this@TouchLockService)
             if (acceleration > threshold && !isOverlayShowing) {
+                triggerHapticFeedback()
                 startLockWithDelay()
             }
         }
@@ -147,6 +184,7 @@ class TouchLockService : Service() {
                 isRunning = true
                 isMonitoring = false
                 handler.removeCallbacks(monitorRunnable)
+                triggerHapticFeedback()
                 startLockWithDelay()
             }
             ACTION_START_MONITOR -> startMonitorMode()
@@ -232,6 +270,7 @@ class TouchLockService : Service() {
             setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     showTouchFeedback(event.rawX, event.rawY)
+                    showControls()
                 }
 
                 if (event.action == MotionEvent.ACTION_UP) {
@@ -290,22 +329,23 @@ class TouchLockService : Service() {
         if (Prefs.isShowUnlockButton(this)) {
             addUnlockButton(overlayType)
         }
+        
+        showControls()
         sendStatusBroadcast()
     }
 
     private fun refreshOverlayUI() {
-        // Remove existing dynamic views
         try { unlockButton?.let { windowManager.removeView(it) } } catch (_: Exception) {}
         unlockButton = null
         removeInfoOverlay()
 
         val overlayType = getOverlayType()
         
-        // Add updated views
         addBottomHint(overlayType)
         if (Prefs.isShowUnlockButton(this)) {
             addUnlockButton(overlayType)
         }
+        showControls()
     }
 
     private fun showTouchFeedback(x: Float, y: Float) {
@@ -362,7 +402,13 @@ class TouchLockService : Service() {
             setPadding(30, 20, 30, 20)
             setBackgroundColor(Color.parseColor("#CC111111"))
             setTextColor(Color.WHITE)
-            setOnClickListener { requestUnlock() }
+            setOnClickListener { 
+                triggerHapticFeedback()
+                requestUnlock() 
+            }
+            if (Prefs.isInvisibleUnlockButton(this@TouchLockService)) {
+                alpha = 0.01f
+            }
         }
 
         val params = WindowManager.LayoutParams(
@@ -391,6 +437,7 @@ class TouchLockService : Service() {
 
         if (tapCount == 2) {
             tapCount = 0
+            triggerHapticFeedback()
             requestUnlock()
         }
     }
@@ -459,9 +506,13 @@ class TouchLockService : Service() {
             imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
         }, 200)
 
-        btnCancel.setOnClickListener { removePinOverlay() }
+        btnCancel.setOnClickListener { 
+            triggerHapticFeedback()
+            removePinOverlay() 
+        }
         btnUnlock.setOnClickListener {
             if (input.text.toString().trim() == Prefs.getPin(this)) {
+                triggerHapticFeedback()
                 unlockOverlayOnly()
             } else {
                 info.text = "Wrong PIN"
@@ -501,6 +552,7 @@ class TouchLockService : Service() {
     }
 
     private fun removeOverlayViews() {
+        handler.removeCallbacks(hideControlsRunnable)
         try { lockOverlay?.let { windowManager.removeView(it) } } catch (_: Exception) {}
         lockOverlay = null
         try { touchFeedbackView?.let { windowManager.removeView(it) } } catch (_: Exception) {}

@@ -17,6 +17,7 @@ object Prefs {
     private const val KEY_SHAKE_THRESHOLD = "shake_threshold"
     private const val KEY_MONITOR_ENABLED = "monitor_enabled"
     private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
+    private const val KEY_INVISIBLE_UNLOCK_BUTTON = "invisible_unlock_button"
 
     private fun prefs(context: Context) =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -97,4 +98,11 @@ object Prefs {
 
     fun setKeepScreenOn(context: Context, enabled: Boolean) =
         prefs(context).edit().putBoolean(KEY_KEEP_SCREEN_ON, enabled).apply()
+
+    fun isInvisibleUnlockButton(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_INVISIBLE_UNLOCK_BUTTON, false)
+
+    fun setInvisibleUnlockButton(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_INVISIBLE_UNLOCK_BUTTON, value).apply()
+    }
 }

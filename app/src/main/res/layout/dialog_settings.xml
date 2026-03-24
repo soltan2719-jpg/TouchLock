@@ -1,141 +1,407 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/card_bg"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:layout_height="match_parent"
+    android:background="@color/bg_main">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/protection_settings"
-        android:textColor="@color/text_main"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <Switch
-        android:id="@+id/dialogSwitchShowUnlock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="@string/show_unlock_button"
-        android:textColor="@color/text_main"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    <Switch
-        android:id="@+id/dialogSwitchDoubleTap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/enable_double_tap_unlock"
-        android:textColor="@color/text_main"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    <Switch
-        android:id="@+id/dialogSwitchRequirePin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/require_pin_to_unlock"
-        android:textColor="@color/text_main"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    <Switch
-        android:id="@+id/dialogSwitchKeepScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/keep_screen_on_while_locked"
-        android:textColor="@color/text_main"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    <!-- NEW: Shake Sensitivity Section -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Shake Sensitivity"
-        android:textColor="@color/text_main"
-        android:textStyle="bold" />
-
-    <SeekBar
-        android:id="@+id/dialogSeekShake"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:max="20"
-        android:progress="10" />
-
+    <!-- Header / Toolbar -->
     <LinearLayout
+        android:id="@+id/headerSettings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="60dp"
+        android:background="@color/card_bg"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Hard Shake"
-            android:textColor="@color/text_secondary"
-            android:textSize="11sp" />
+            android:text="@string/settings_title"
+            android:textColor="@color/text_main"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="Light Shake"
-            android:textColor="@color/text_secondary"
-            android:textSize="11sp" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:text="@string/save"
+            android:textColor="@color/primary_blue"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="PIN"
-        android:textColor="@color/text_main"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerSettings"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp">
 
-    <EditText
-        android:id="@+id/dialogEdtPin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Example: 1234"
-        android:inputType="numberPassword"
-        android:textColor="@color/text_main"
-        android:textColorHint="@color/text_secondary" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="600dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Auto-lock delay (seconds)"
-        android:textColor="@color/text_main"
-        android:textStyle="bold" />
+            <!-- Category: Protection -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/category_protection"
+                android:textColor="@color/primary_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/dialogEdtDelay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="0 = immediate"
-        android:inputType="number"
-        android:textColor="@color/text_main"
-        android:textColorHint="@color/text_secondary" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
-    <Button
-        android:id="@+id/btnPremium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_secondary_button"
-        android:text="Upgrade to Premium"
-        android:textColor="@color/text_main" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-    <Button
-        android:id="@+id/btnSaveSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/bg_circle_primary"
-        android:text="Save Settings"
-        android:textColor="@color/text_main" />
+                    <Switch
+                        android:id="@+id/dialogSwitchShowUnlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:text="@string/show_unlock_button"
+                        android:textColor="@color/text_main"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-</LinearLayout>
+                    <Switch
+                        android:id="@+id/dialogSwitchInvisibleUnlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:text="@string/invisible_unlock_mode"
+                        android:textColor="@color/text_main"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <Switch
+                        android:id="@+id/dialogSwitchDoubleTap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:text="@string/enable_double_tap_unlock"
+                        android:textColor="@color/text_main"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <Switch
+                        android:id="@+id/dialogSwitchRequirePin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:text="@string/require_pin_to_unlock"
+                        android:textColor="@color/text_main"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <Switch
+                        android:id="@+id/dialogSwitchKeepScreen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:text="@string/keep_screen_on_while_locked"
+                        android:textColor="@color/text_main"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Category: Sensitivity -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/category_sensitivity"
+                android:textColor="@color/primary_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/shake_to_lock"
+                        android:textColor="@color/text_main"
+                        android:textStyle="bold" />
+
+                    <SeekBar
+                        android:id="@+id/dialogSeekShake"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:minHeight="48dp"
+                        android:max="20"
+                        android:progress="10" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/sensitivity_hard"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@string/sensitivity_light"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Category: Security -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/category_security"
+                android:textColor="@color/primary_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unlock_pin"
+                        android:textColor="@color/text_main"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/dialogEdtPin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:autofillHints="password"
+                        android:backgroundTint="@color/primary_blue"
+                        android:hint="@string/pin_hint"
+                        android:inputType="numberPassword"
+                        android:minHeight="48dp"
+                        android:textColor="@color/text_main"
+                        android:textColorHint="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/auto_lock_delay"
+                        android:textColor="@color/text_main"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/dialogEdtDelay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:autofillHints="none"
+                        android:backgroundTint="@color/primary_blue"
+                        android:hint="@string/delay_hint"
+                        android:inputType="number"
+                        android:minHeight="48dp"
+                        android:textColor="@color/text_main"
+                        android:textColorHint="@color/text_secondary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Category: Ads & Privacy -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/category_ads_privacy"
+                android:textColor="@color/primary_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <Switch
+                        android:id="@+id/dialogSwitchPersonalizedAds"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:text="@string/personalized_ads"
+                        android:textColor="@color/text_main"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <Button
+                        android:id="@+id/btnWatchAd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_secondary_button"
+                        android:minHeight="48dp"
+                        android:text="@string/watch_ad_support"
+                        android:textColor="@color/text_main"
+                        android:textAllCaps="false" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Category: Support -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/category_support"
+                android:textColor="@color/primary_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <Button
+                        android:id="@+id/btnPremium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:background="@drawable/bg_circle_primary"
+                        android:text="@string/go_premium_no_ads"
+                        android:textColor="@color/text_main"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnTip1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:minHeight="48dp"
+                            android:background="@drawable/bg_secondary_button"
+                            android:text="@string/tip_1"
+                            android:textAllCaps="false"
+                            android:textColor="@color/text_main" />
+
+                        <Space
+                            android:layout_width="8dp"
+                            android:layout_height="1dp" />
+
+                        <Button
+                            android:id="@+id/btnTip2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:minHeight="48dp"
+                            android:background="@drawable/bg_secondary_button"
+                            android:text="@string/tip_2"
+                            android:textAllCaps="false"
+                            android:textColor="@color/text_main" />
+
+                        <Space
+                            android:layout_width="8dp"
+                            android:layout_height="1dp" />
+
+                        <Button
+                            android:id="@+id/btnTip5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:minHeight="48dp"
+                            android:background="@drawable/bg_secondary_button"
+                            android:text="@string/tip_5"
+                            android:textAllCaps="false"
+                            android:textColor="@color/text_main" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

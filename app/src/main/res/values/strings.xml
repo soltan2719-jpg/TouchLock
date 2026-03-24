@@ -9,14 +9,36 @@
     <string name="selected_apps_none">Selected apps: none</string>
     <string name="apps_selected_for_autostart">Apps selected for auto-start</string>
 
-    <!-- ⭐ Add this -->
     <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="premium_already_have">You already have Premium</string>
     <string name="premium_not_active">Premium not active</string>
     <string name="ready">Ready</string>
     <string name="protection_settings">Protection Settings</string>
-    <string name="show_unlock_button">Show unlock button</string>
-    <string name="enable_double_tap_unlock">Enable double tap unlock</string>
-    <string name="require_pin_to_unlock">Require PIN to unlock</string>
-    <string name="keep_screen_on_while_locked">Keep screen on while locked</string>
+    <string name="show_unlock_button">Show Unlock Button</string>
+    <string name="enable_double_tap_unlock">Double Tap to Unlock</string>
+    <string name="require_pin_to_unlock">Require PIN to Unlock</string>
+    <string name="keep_screen_on_while_locked">Force Screen ON</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="save">SAVE</string>
+    <string name="category_protection">PROTECTION</string>
+    <string name="invisible_unlock_mode">Invisible Unlock Mode</string>
+    <string name="category_sensitivity">SENSITIVITY</string>
+    <string name="shake_to_lock">Shake to Lock</string>
+    <string name="sensitivity_hard">Hard</string>
+    <string name="sensitivity_light">Light</string>
+    <string name="category_security">SECURITY</string>
+    <string name="unlock_pin">Unlock PIN</string>
+    <string name="pin_hint">At least 4 digits</string>
+    <string name="auto_lock_delay">Auto-lock delay</string>
+    <string name="delay_hint">Seconds (0 = instant)</string>
+    <string name="category_support">SUPPORT DEVELOPMENT</string>
+    <string name="go_premium_no_ads">GO PREMIUM (No Ads)</string>
+    <string name="tip_1">☕ 1€</string>
+    <string name="tip_2">☕ 2€</string>
+    <string name="tip_5">❤️ 5€</string>
+
+    <string name="category_ads_privacy">ADS &amp; PRIVACY</string>
+    <string name="personalized_ads">Personalized Ads</string>
+    <string name="watch_ad_support">Support with an Ad</string>
 </resources>
