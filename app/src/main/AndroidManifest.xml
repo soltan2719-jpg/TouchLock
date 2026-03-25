@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.touchlock"
+
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
@@ -27,7 +27,7 @@
         <!-- ADMOB ID (REQUIRED TO PREVENT CRASH) -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-8507852404489271~7012629583"/>
 
         <!-- Activities -->
         <activity

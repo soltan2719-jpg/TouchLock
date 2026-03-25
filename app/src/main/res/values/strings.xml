@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">TouchLock</string>
-    <string name="lock_now">🔒\nLock Now</string>
-    <string name="unlock">🔓\nUnlock</string>
+    <string name="lock_now">Lock Now</string>
+    <string name="unlock">Unlock</string>
     <string name="protection_active">Protection active.</string>
     <string name="touchlock_ready">TouchLock is ready.</string>
     <string name="premium_enabled">Premium enabled</string>
     <string name="upgrade_to_premium">Upgrade to Premium</string>
     <string name="selected_apps_none">Selected apps: none</string>
-    <string name="apps_selected_for_autostart">Apps selected for auto-start</string>
+    <string name="apps_selected_for_autostart">Apps selected for auto-start:</string>
 
-    <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_banner_id">ca-app-pub-8507852404489271/4630008829</string>
     <string name="premium_already_have">You already have Premium</string>
     <string name="premium_not_active">Premium not active</string>
     <string name="ready">Ready</string>
@@ -34,11 +34,41 @@
     <string name="delay_hint">Seconds (0 = instant)</string>
     <string name="category_support">SUPPORT DEVELOPMENT</string>
     <string name="go_premium_no_ads">GO PREMIUM (No Ads)</string>
-    <string name="tip_1">☕ 1€</string>
-    <string name="tip_2">☕ 2€</string>
-    <string name="tip_5">❤️ 5€</string>
+    <string name="tip_1">1€</string>
+    <string name="tip_2">2€</string>
+    <string name="tip_5">5€</string>
 
     <string name="category_ads_privacy">ADS &amp; PRIVACY</string>
     <string name="personalized_ads">Personalized Ads</string>
     <string name="watch_ad_support">Support with an Ad</string>
+
+    <!-- Additional UI strings -->
+    <string name="system_status">System Status</string>
+    <string name="overlay_granted">Overlay: Granted</string>
+    <string name="overlay_not_granted">Overlay: Not granted</string>
+    <string name="usage_granted">Usage: Granted</string>
+    <string name="usage_not_granted">Usage: Not granted</string>
+    <string name="battery_unrestricted">Battery: Unrestricted</string>
+    <string name="battery_optimized">Battery: Optimized</string>
+    <string name="stop_everything">Stop Everything</string>
+    <string name="auto_start">Auto-Start</string>
+    <string name="pick_apps">Pick Apps</string>
+    <string name="quick_tools">Quick Tools</string>
+    <string name="monitor_mode">Monitor Mode</string>
+    <string name="needs_permission">Needs permission</string>
+
+    <string name="lock_starts_in">Touch lock starts in %1$d second(s)...</string>
+    <string name="unlock_hint_prefix">Unlock: </string>
+    <string name="unlock_method_button">button</string>
+    <string name="unlock_method_double_tap">double tap</string>
+    <string name="unlock_method_pin">PIN</string>
+    <string name="unlock_method_notification">notification</string>
+    <string name="enter_pin_to_unlock">Enter PIN to unlock</string>
+    <string name="wrong_pin">Wrong PIN</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="notification_monitoring_active">Monitoring selected apps • Touch lock active</string>
+    <string name="notification_monitoring">Monitoring selected apps</string>
+    <string name="notification_active">Touch lock active</string>
+    <string name="notification_running">TouchLock running</string>
 </resources>

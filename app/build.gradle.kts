@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.touchlock"
-    compileSdk = 34
+    namespace = "com.noureddine.touchlock"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.touchlock"
+        applicationId = "com.noureddine.touchlock"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 4
         versionName = "4.0"
 
@@ -19,7 +19,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# --- Google Play Billing Library ---
+-keep class com.android.vending.billing.** { *; }
+
+# --- AdMob ---
+-keep public class com.google.android.gms.ads.** {
+   public *;
+}
+
+# --- Keep common attributes ---
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod

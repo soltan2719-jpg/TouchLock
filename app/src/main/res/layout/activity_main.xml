@@ -1,262 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/bg_main"
-    android:padding="20dp"
-    android:paddingBottom="12dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Header Section -->
-    <TextView
-        android:id="@+id/txtTitle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TouchLock"
-        android:textColor="@color/text_main"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/bg_main"
+        android:padding="20dp"
+        android:paddingBottom="12dp">
 
-    <TextView
-        android:id="@+id/txtSubtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="TouchLock is ready."
-        android:textColor="@color/text_secondary"
-        android:textSize="16sp" />
-
-    <!-- System Status Card -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="@color/card_bg"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp">
-
-        <LinearLayout
+        <!-- Header Section -->
+        <TextView
+            android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:text="@string/app_name"
+            android:textColor="@color/text_main"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="⚙️ System Status"
-                android:textColor="@color/text_main"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/txtSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/touchlock_ready"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txtSystemStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Ready"
-                android:textColor="@color/success"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <!-- System Status Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/txtOverlayStatus"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Overlay: Granted"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
+                    android:text="@string/system_status"
+                    android:textColor="@color/text_main"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txtUsageStatus"
-                    android:layout_width="0dp"
+                    android:id="@+id/txtSystemStatus"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="Usage: Not granted"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Main Control Section -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_card"
-        android:elevation="6dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="12dp">
-
-        <Button
-            android:id="@+id/btnStartLockNow"
-            android:layout_width="145dp"
-            android:layout_height="145dp"
-            android:background="@drawable/bg_circle_primary"
-            android:text="🔒\nLock Now"
-            android:textAllCaps="false"
-            android:textColor="@color/text_main"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btnStopAll"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_secondary_button"
-            android:text="Stop Everything"
-            android:textAllCaps="false"
-            android:textColor="@color/text_main"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <!-- Secondary Tools Row -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:minHeight="180dp"
-        android:orientation="horizontal">
-
-        <!-- Auto Start Config -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="6dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_card"
-            android:elevation="6dp"
-            android:orientation="vertical"
-            android:padding="12dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="▶ Auto-Start"
-                android:textColor="@color/text_main"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtSelectedApps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:text="Selected apps: none"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
-
-            <HorizontalScrollView
-                android:id="@+id/scrollSelectedApps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:scrollbars="none">
+                    android:layout_marginTop="8dp"
+                    android:text="@string/ready"
+                    android:textColor="@color/success"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/chipsContainer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-            </HorizontalScrollView>
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-            <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/txtOverlayStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/overlay_granted"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
 
-            <Button
-                android:id="@+id/btnPickApps"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:background="@drawable/bg_secondary_button"
-                android:text="Pick Apps"
-                android:textAllCaps="false"
-                android:textColor="@color/text_main" />
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/txtUsageStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="@string/usage_not_granted"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Quick Tools -->
+        <!-- Main Control Section -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/bg_card"
             android:elevation="6dp"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="12dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🛡 Quick Tools"
+            <Button
+                android:id="@+id/btnStartLockNow"
+                android:layout_width="145dp"
+                android:layout_height="145dp"
+                android:background="@drawable/bg_circle_primary"
+                android:text="@string/lock_now"
+                android:textAllCaps="false"
                 android:textColor="@color/text_main"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/btnStartMonitor"
+                android:id="@+id/btnStopAll"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginTop="6dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/bg_secondary_button"
-                android:text="Monitor Mode"
+                android:text="@string/stop_everything"
                 android:textAllCaps="false"
-                android:textColor="@color/text_main" />
-
-            <Button
-                android:id="@+id/btnOpenSettings"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_secondary_button"
-                android:text="Settings"
-                android:textAllCaps="false"
-                android:textColor="@color/text_main" />
+                android:textColor="@color/text_main"
+                android:textSize="16sp" />
         </LinearLayout>
+
+        <!-- Secondary Tools Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="180dp"
+            android:orientation="horizontal">
+
+            <!-- Auto Start Config -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_card"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/auto_start"
+                    android:textColor="@color/text_main"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtSelectedApps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:text="@string/selected_apps_none"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <HorizontalScrollView
+                    android:id="@+id/scrollSelectedApps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/chipsContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+
+                <Button
+                    android:id="@+id/btnPickApps"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_secondary_button"
+                    android:text="@string/pick_apps"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_main" />
+            </LinearLayout>
+
+            <!-- Quick Tools -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_card"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quick_tools"
+                    android:textColor="@color/text_main"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnStartMonitor"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_secondary_button"
+                    android:text="@string/monitor_mode"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_main" />
+
+                <Button
+                    android:id="@+id/btnOpenSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_secondary_button"
+                    android:text="@string/settings_title"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_main" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Ad Container -->
+        <FrameLayout
+            android:id="@+id/adContainer"
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Logic Container (Hidden from view, but active for ViewBinding) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.SwitchCompat android:id="@+id/switchShowUnlock" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <androidx.appcompat.widget.SwitchCompat android:id="@+id/switchDoubleTap" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <androidx.appcompat.widget.SwitchCompat android:id="@+id/switchRequirePin" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <EditText android:id="@+id/edtPin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:autofillHints="password" />
+            <EditText android:id="@+id/edtDelay" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" android:autofillHints="none" />
+
+            <!-- Action Buttons for Binding -->
+            <Button android:id="@+id/btnSaveSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnPremium" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnTip1" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnTip2" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnTip5" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnGrantOverlay" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnGrantUsageAccess" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btnOpenSupport" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+
     </LinearLayout>
-
-    <!-- Ad Container -->
-    <FrameLayout
-        android:id="@+id/adContainer"
-        android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:layout_marginTop="4dp" />
-
-    <!-- Logic Container (Hidden from view, but active for ViewBinding) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.SwitchCompat android:id="@+id/switchShowUnlock" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <androidx.appcompat.widget.SwitchCompat android:id="@+id/switchDoubleTap" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <androidx.appcompat.widget.SwitchCompat android:id="@+id/switchRequirePin" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <EditText android:id="@+id/edtPin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" />
-        <EditText android:id="@+id/edtDelay" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number" />
-
-        <!-- Action Buttons for Binding -->
-        <Button android:id="@+id/btnSaveSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btnPremium" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btnTip1" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btnTip2" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btnTip5" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btnGrantOverlay" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btnGrantUsageAccess" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btnOpenSupport" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    </LinearLayout>
-
-</LinearLayout>
+</layout>
