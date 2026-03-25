@@ -4,8 +4,9 @@
     <string name="unlock">Unlock</string>
     <string name="protection_active">Protection active.</string>
     <string name="touchlock_ready">TouchLock is ready.</string>
-    <string name="premium_enabled">Premium enabled</string>
+    <string name="premium_enabled">Premium Active</string>
     <string name="upgrade_to_premium">Upgrade to Premium</string>
+    <string name="upgrade_to_permanent_premium">Upgrade to Premium</string>
     <string name="selected_apps_none">Selected apps: none</string>
     <string name="apps_selected_for_autostart">Apps selected for auto-start:</string>
 
@@ -16,13 +17,13 @@
     <string name="protection_settings">Protection Settings</string>
     <string name="show_unlock_button">Show Unlock Button</string>
     <string name="enable_double_tap_unlock">Double Tap to Unlock</string>
-    <string name="require_pin_to_unlock">Require PIN to Unlock</string>
-    <string name="keep_screen_on_while_locked">Force Screen ON</string>
+    <string name="require_pin_to_unlock">Require PIN to Unlock (Premium)</string>
+    <string name="keep_screen_on_while_locked">Force Screen ON (Premium)</string>
 
     <string name="settings_title">Settings</string>
     <string name="save">SAVE</string>
     <string name="category_protection">PROTECTION</string>
-    <string name="invisible_unlock_mode">Invisible Unlock Mode</string>
+    <string name="invisible_unlock_mode">Invisible Unlock Mode (Premium)</string>
     <string name="category_sensitivity">SENSITIVITY</string>
     <string name="shake_to_lock">Shake to Lock</string>
     <string name="sensitivity_hard">Hard</string>
@@ -33,7 +34,7 @@
     <string name="auto_lock_delay">Auto-lock delay</string>
     <string name="delay_hint">Seconds (0 = instant)</string>
     <string name="category_support">SUPPORT DEVELOPMENT</string>
-    <string name="go_premium_no_ads">GO PREMIUM (No Ads)</string>
+    <string name="go_premium_no_ads">Upgrade to Premium</string>
     <string name="tip_1">1€</string>
     <string name="tip_2">2€</string>
     <string name="tip_5">5€</string>
@@ -41,6 +42,13 @@
     <string name="category_ads_privacy">ADS &amp; PRIVACY</string>
     <string name="personalized_ads">Personalized Ads</string>
     <string name="watch_ad_support">Support with an Ad</string>
+    <string name="watch_ad_premium">Watch Ad for 2 Hours Premium</string>
+    <string name="premium_unlocked_success">Premium unlocked for 2 hours</string>
+    <string name="free_version">Free Version</string>
+    <string name="premium_feature_title">Premium Feature</string>
+    <string name="premium_feature_message">This feature is available in Premium. Upgrade permanently or watch an ad to unlock it for 2 hours.</string>
+    <string name="watch_ad">Watch Ad</string>
+    <string name="upgrade">Upgrade</string>
 
     <!-- Additional UI strings -->
     <string name="system_status">System Status</string>
