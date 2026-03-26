@@ -6,7 +6,7 @@
     <string name="touchlock_ready">TouchLock is ready.</string>
     <string name="premium_enabled">Premium Active</string>
     <string name="upgrade_to_premium">Upgrade to Premium</string>
-    <string name="upgrade_to_permanent_premium">Upgrade to Premium</string>
+    <string name="upgrade_to_permanent_premium">Upgrade to Permanent Premium</string>
     <string name="selected_apps_none">Selected apps: none</string>
     <string name="apps_selected_for_autostart">Apps selected for auto-start:</string>
 
@@ -49,6 +49,14 @@
     <string name="premium_feature_message">This feature is available in Premium. Upgrade permanently or watch an ad to unlock it for 2 hours.</string>
     <string name="watch_ad">Watch Ad</string>
     <string name="upgrade">Upgrade</string>
+
+    <!-- Support Dialog Strings -->
+    <string name="support_title">Support developer</string>
+    <string name="support_message">This is a voluntary tip to support the developer.\nThis will NOT unlock premium features.\nThis will NOT remove ads.\nThis is optional.</string>
+    <string name="continue_text">Continue</string>
+    <string name="thank_you_title">Thank you ❤️</string>
+    <string name="thank_you_message">Thank you for supporting the developer.\nYour tip helps improve the app.\n\nThis tip does NOT unlock premium features.</string>
+    <string name="ok">OK</string>
 
     <!-- Additional UI strings -->
     <string name="system_status">System Status</string>

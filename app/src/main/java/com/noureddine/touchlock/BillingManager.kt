@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.android.billingclient.api.*
 
 class BillingManager(
@@ -43,9 +44,21 @@ class BillingManager(
     }
 
     fun buyPremium() = launchPurchase(premiumId)
-    fun buyTip1() = launchPurchase("tip_1")
-    fun buyTip2() = launchPurchase("tip_2")
-    fun buyTip5() = launchPurchase("tip_5")
+
+    fun buyTip1() = showTipConfirmation("tip_1")
+    fun buyTip2() = showTipConfirmation("tip_2")
+    fun buyTip5() = showTipConfirmation("tip_5")
+
+    private fun showTipConfirmation(productId: String) {
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.support_title)
+            .setMessage(R.string.support_message)
+            .setPositiveButton(R.string.continue_text) { _, _ ->
+                launchPurchase(productId)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
 
     private fun launchPurchase(productId: String) {
         if (!isBillingReady) {
@@ -90,6 +103,7 @@ class BillingManager(
             acknowledgePurchase(purchase)
         } else {
             // It's a tip - these must be CONSUMED so they can be bought again
+            // Tips do NOT unlock premium or remove ads
             consumePurchase(purchase)
         }
     }
@@ -109,9 +123,17 @@ class BillingManager(
             .build()
         billingClient.consumeAsync(params) { result, _ ->
             if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                Toast.makeText(context, "Thank you for your support! ❤️", Toast.LENGTH_SHORT).show()
+                showThankYouDialog()
             }
         }
+    }
+
+    private fun showThankYouDialog() {
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.thank_you_title)
+            .setMessage(R.string.thank_you_message)
+            .setPositiveButton(R.string.ok, null)
+            .show()
     }
 
     fun checkPremium(onResult: ((Boolean) -> Unit)? = null) {
@@ -123,6 +145,8 @@ class BillingManager(
         billingClient.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()
         ) { _, purchases ->
+            // Only search for the specific premium upgrade product ID
+            // Tips (tip_1, tip_2, tip_5) are excluded from this check
             val hasPremium = purchases.any { it.products.contains(premiumId) && it.purchaseState == Purchase.PurchaseState.PURCHASED }
             Prefs.setPremium(context, hasPremium)
             onResult?.invoke(hasPremium)
