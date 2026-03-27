@@ -51,8 +51,10 @@
     <string name="upgrade">Upgrade</string>
 
     <!-- Support Dialog Strings -->
-    <string name="support_title">Support developer</string>
-    <string name="support_message">This is a voluntary tip to support the developer.\nThis will NOT unlock premium features.\nThis will NOT remove ads.\nThis is optional.</string>
+    <string name="support_title">Support TouchLock</string>
+    <string name="support_message">TouchLock is free to use. Premium removes ads and unlocks extra features.</string>
+    <string name="support_dev_title">Support developer</string>
+    <string name="support_dev_message">This is a voluntary tip to support the developer.\nThis will NOT unlock premium features.\nThis will NOT remove ads.\nThis is optional.</string>
     <string name="continue_text">Continue</string>
     <string name="thank_you_title">Thank you ❤️</string>
     <string name="thank_you_message">Thank you for supporting the developer.\nYour tip helps improve the app.\n\nThis tip does NOT unlock premium features.</string>
@@ -87,4 +89,24 @@
     <string name="notification_monitoring">Monitoring selected apps</string>
     <string name="notification_active">Touch lock active</string>
     <string name="notification_running">TouchLock running</string>
+
+    <!-- Hardcoded strings from Layouts and Code -->
+    <string name="touch_is_locked">Touch is LOCKED</string>
+    <string name="unlock_long_press">UNLOCK (Long press)</string>
+    <string name="premium_unlocks">Premium unlocks:</string>
+    <string name="premium_features_list">• Remove all ads\n• Advanced protection options\n• Faster auto-lock\n• Priority updates</string>
+    <string name="buy_premium">Buy Premium</string>
+    <string name="restore_purchase">Restore Purchase</string>
+    <string name="settings_saved">Settings Saved!</string>
+    <string name="pin_length_warning">PIN must be at least 4 digits</string>
+    <string name="choose_apps_title">Choose apps for auto-start lock</string>
+    <string name="monitor_mode_started">Monitor mode started</string>
+    <string name="pick_one_app_warning">Please choose at least one app</string>
+    <string name="usage_access_toast">Find TouchLock and allow Usage Access</string>
+    <string name="billing_not_ready">Billing not ready</string>
+    <string name="billing_unavailable">Premium screen loaded, billing unavailable</string>
+
+    <!-- Monitor Mode Explanation Dialog -->
+    <string name="monitor_mode_explain_title">How Monitor Mode works</string>
+    <string name="monitor_mode_explain_message">Why do we need this?\n\n🔒 Manual Mode:\nYou have to open TouchLock and press \"Lock Now\" every time.\n\n✨ Monitor Mode (Smart):\nTouchLock watches the apps you choose (like YouTube or Netflix).\nAs soon as you open them, the screen locks automatically.\n\nTo enable this feature, you must allow \"Usage Access\" on the next screen.</string>
 </resources>

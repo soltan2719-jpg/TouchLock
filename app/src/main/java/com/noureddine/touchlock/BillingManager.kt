@@ -51,8 +51,8 @@ class BillingManager(
 
     private fun showTipConfirmation(productId: String) {
         AlertDialog.Builder(activity)
-            .setTitle(R.string.support_title)
-            .setMessage(R.string.support_message)
+            .setTitle(R.string.support_dev_title)
+            .setMessage(R.string.support_dev_message)
             .setPositiveButton(R.string.continue_text) { _, _ ->
                 launchPurchase(productId)
             }
@@ -62,7 +62,7 @@ class BillingManager(
 
     private fun launchPurchase(productId: String) {
         if (!isBillingReady) {
-            Toast.makeText(context, "Billing not ready", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.billing_not_ready), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -155,7 +155,7 @@ class BillingManager(
 
     fun restorePurchase(onResult: (Boolean) -> Unit) {
         if (!isBillingReady) {
-            Toast.makeText(context, "Billing service not ready", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.billing_not_ready), Toast.LENGTH_SHORT).show()
             onResult(Prefs.isPremium(context))
             return
         }

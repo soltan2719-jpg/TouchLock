@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">TouchLock</string>
+    <string name="lock_now">Verrouiller maintenant</string>
+    <string name="unlock">Déverrouiller</string>
+    <string name="protection_active">Protection active.</string>
+    <string name="touchlock_ready">TouchLock est prêt.</string>
+    <string name="premium_enabled">Premium Actif</string>
+    <string name="upgrade_to_premium">Passer à la version Premium</string>
+    <string name="upgrade_to_permanent_premium">Passer au Premium Permanent</string>
+    <string name="selected_apps_none">Applications sélectionnées : aucune</string>
+    <string name="apps_selected_for_autostart">Applications sélectionnées pour le démarrage automatique :</string>
+
+    <string name="premium_already_have">Vous avez déjà le Premium</string>
+    <string name="premium_not_active">Premium non actif</string>
+    <string name="ready">Prêt</string>
+    <string name="protection_settings">Paramètres de protection</string>
+    <string name="show_unlock_button">Afficher le bouton de déverrouillage</string>
+    <string name="enable_double_tap_unlock">Double-clic pour déverrouiller</string>
+    <string name="require_pin_to_unlock">Exiger un code PIN pour déverrouiller (Premium)</string>
+    <string name="keep_screen_on_while_locked">Forcer l\'écran allumé (Premium)</string>
+
+    <string name="settings_title">Paramètres</string>
+    <string name="save">ENREGISTRER</string>
+    <string name="category_protection">PROTECTION</string>
+    <string name="invisible_unlock_mode">Mode de déverrouillage invisible (Premium)</string>
+    <string name="category_sensitivity">SENSIBILITÉ</string>
+    <string name="shake_to_lock">Secouer pour verrouiller</string>
+    <string name="sensitivity_hard">Difficile</string>
+    <string name="sensitivity_light">Léger</string>
+    <string name="category_security">SÉCURITÉ</string>
+    <string name="unlock_pin">Code PIN de déverrouillage</string>
+    <string name="pin_hint">Au moins 4 chiffres</string>
+    <string name="auto_lock_delay">Délai de verrouillage automatique</string>
+    <string name="delay_hint">Secondes (0 = instantané)</string>
+    <string name="category_support">SOUTENIR LE DÉVELOPPEMENT</string>
+    <string name="go_premium_no_ads">Passer au Premium</string>
+
+    <string name="category_ads_privacy">PUBS ET CONFIDENTIALITÉ</string>
+    <string name="personalized_ads">Publicités personnalisées</string>
+    <string name="watch_ad_support">Soutenir avec une publicité</string>
+    <string name="watch_ad_premium">Regarder une pub pour 2h de Premium</string>
+    <string name="premium_unlocked_success">Premium débloqué pour 2 heures</string>
+    <string name="free_version">Version gratuite</string>
+    <string name="premium_feature_title">Fonctionnalité Premium</string>
+    <string name="premium_feature_message">Cette fonctionnalité est disponible en version Premium. Passez au Premium permanent ou regardez une publicité pour la débloquer pendant 2 heures.</string>
+    <string name="watch_ad">Regarder la pub</string>
+    <string name="upgrade">Mettre à niveau</string>
+
+    <string name="support_title">Soutenir TouchLock</string>
+    <string name="support_message">TouchLock est gratuit. Le Premium supprime les publicités et débloque des fonctionnalités supplémentaires.</string>
+    <string name="support_dev_title">Soutenir le développeur</string>
+    <string name="support_dev_message">Ceci est un pourboire volontaire pour soutenir le développeur.\nCela ne débloquera PAS les fonctionnalités premium.\nCela ne supprimera PAS les publicités.\nC\'est facultatif.</string>
+    <string name="continue_text">Continuer</string>
+    <string name="thank_you_title">Merci ❤️</string>
+    <string name="thank_you_message">Merci de soutenir le développeur.\nVotre contribution aide à améliorer l\'application.\n\nCe pourboire ne débloque pas les fonctionnalités premium.</string>
+    <string name="ok">OK</string>
+
+    <string name="system_status">État du système</string>
+    <string name="overlay_granted">Superposition : Accordée</string>
+    <string name="overlay_not_granted">Superposition : Non accordée</string>
+    <string name="usage_granted">Usage : Accordé</string>
+    <string name="usage_not_granted">Usage : Non accordé</string>
+    <string name="battery_unrestricted">Batterie : Non restreinte</string>
+    <string name="battery_optimized">Batterie : Optimisée</string>
+    <string name="stop_everything">Tout arrêter</string>
+    <string name="auto_start">Démarrage automatique</string>
+    <string name="pick_apps">Choisir les applis</string>
+    <string name="quick_tools">Outils rapides</string>
+    <string name="monitor_mode">Mode surveillance</string>
+    <string name="needs_permission">Nécessite une permission</string>
+
+    <string name="lock_starts_in">Le verrouillage tactile commence dans %1$d seconde(s)...</string>
+    <string name="unlock_hint_prefix">Déverrouiller : </string>
+    <string name="unlock_method_button">bouton</string>
+    <string name="unlock_method_double_tap">double tape</string>
+    <string name="unlock_method_pin">PIN</string>
+    <string name="unlock_method_notification">notification</string>
+    <string name="enter_pin_to_unlock">Entrez le code PIN pour déverrouiller</string>
+    <string name="wrong_pin">Mauvais code PIN</string>
+    <string name="cancel">Annuler</string>
+
+    <string name="notification_monitoring_active">Surveillance active • Verrouillage actif</string>
+    <string name="notification_monitoring">Surveillance des applications</string>
+    <string name="notification_active">Verrouillage tactile actif</string>
+    <string name="notification_running">TouchLock en cours d\'exécution</string>
+
+    <string name="touch_is_locked">Le tactile est VERROUILLÉ</string>
+    <string name="unlock_long_press">DÉVERROUILLER (Appui long)</string>
+    <string name="premium_unlocks">Le Premium débloque :</string>
+    <string name="premium_features_list">• Supprimer toutes les pubs\n• Options de protection avancées\n• Verrouillage auto plus rapide\n• Mises à jour prioritaires</string>
+    <string name="buy_premium">Acheter Premium</string>
+    <string name="restore_purchase">Restaurer l\'achat</string>
+    <string name="settings_saved">Paramètres enregistrés !</string>
+    <string name="pin_length_warning">Le code PIN doit comporter au moins 4 chiffres</string>
+    <string name="choose_apps_title">Choisir les applis pour le verrouillage auto</string>
+    <string name="monitor_mode_started">Mode surveillance démarré</string>
+    <string name="pick_one_app_warning">Veuillez choisir au moins une application</string>
+    <string name="usage_access_toast">Trouvez TouchLock et autorisez l\'accès à l\'usage</string>
+    <string name="billing_not_ready">Service de facturation non prêt</string>
+    <string name="billing_unavailable">Écran Premium chargé, facturation indisponible</string>
+
+    <!-- Monitor Mode Explanation Dialog -->
+    <string name="monitor_mode_explain_title">Fonctionnement du mode surveillance</string>
+    <string name="monitor_mode_explain_message">Pourquoi avons-nous besoin de cela ?\n\n🔒 Mode Manuel :\nVous devez ouvrir TouchLock et appuyer sur \"Verrouiller maintenant\" à chaque fois.\n\n✨ Mode Surveillance (Intelligent) :\nTouchLock surveille les applications que vous choisissez (comme YouTube ou Netflix).\nDès que vous les ouvrez, l\'écran se verrouille automatiquement.\n\nPour activer cette fonctionnalité, vous devez autoriser l\' \"Accès à l\'utilisation\" sur l\'écran suivant.</string>
+</resources>

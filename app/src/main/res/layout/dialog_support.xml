@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Support TouchLock"
+        android:text="@string/support_title"
         android:textColor="@color/text_main"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="TouchLock is free to use. Premium removes ads and unlocks extra features."
+        android:text="@string/support_message"
         android:textColor="@color/text_secondary"
         android:textSize="14sp" />
 
@@ -28,7 +28,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_primary_button"
-        android:text="Upgrade to Premium"
+        android:text="@string/upgrade_to_premium"
         android:textAllCaps="false"
         android:textColor="@color/text_main" />
 
@@ -44,7 +44,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tip_button"
-            android:text="☕ 1€"
+            android:text="@string/tip_1"
             android:textAllCaps="false"
             android:textColor="@color/text_main" />
 
@@ -58,7 +58,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tip_button"
-            android:text="☕ 2€"
+            android:text="@string/tip_2"
             android:textAllCaps="false"
             android:textColor="@color/text_main" />
 
@@ -72,7 +72,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tip_button"
-            android:text="❤️ 5€"
+            android:text="@string/tip_5"
             android:textAllCaps="false"
             android:textColor="@color/text_main" />
     </LinearLayout>

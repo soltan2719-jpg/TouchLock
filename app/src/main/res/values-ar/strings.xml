@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">TouchLock</string>
+    <string name="lock_now">قفل الآن</string>
+    <string name="unlock">إلغاء القفل</string>
+    <string name="protection_active">الحماية نشطة.</string>
+    <string name="touchlock_ready">TouchLock جاهز.</string>
+    <string name="premium_enabled">Premium نشط</string>
+    <string name="upgrade_to_premium">الترقية إلى Premium</string>
+    <string name="upgrade_to_permanent_premium">الترقية إلى Premium دائم</string>
+    <string name="selected_apps_none">التطبيقات المختارة: لا يوجد</string>
+    <string name="apps_selected_for_autostart">التطبيقات المختارة للتشغيل التلقائي:</string>
+
+    <string name="premium_already_have">لديك Premium بالفعل</string>
+    <string name="premium_not_active">Premium غير نشط</string>
+    <string name="ready">جاهز</string>
+    <string name="protection_settings">إعدادات الحماية</string>
+    <string name="show_unlock_button">إظهار زر إلغاء القفل</string>
+    <string name="enable_double_tap_unlock">النقر المزدوج لإلغاء القفل</string>
+    <string name="require_pin_to_unlock">طلب رمز PIN لإلغاء القفل (Premium)</string>
+    <string name="keep_screen_on_while_locked">إجبار الشاشة على البقاء قيد التشغيل (Premium)</string>
+
+    <string name="settings_title">الإعدادات</string>
+    <string name="save">حفظ</string>
+    <string name="category_protection">الحماية</string>
+    <string name="invisible_unlock_mode">وضع إلغاء القفل الخفي (Premium)</string>
+    <string name="category_sensitivity">الحساسية</string>
+    <string name="shake_to_lock">الهز للقفل</string>
+    <string name="sensitivity_hard">صعب</string>
+    <string name="sensitivity_light">خفيف</string>
+    <string name="category_security">الأمان</string>
+    <string name="unlock_pin">رمز PIN لإلغاء القفل</string>
+    <string name="pin_hint">4 أرقام على الأقل</string>
+    <string name="auto_lock_delay">تأخير القفل التلقائي</string>
+    <string name="delay_hint">ثواني (0 = فوري)</string>
+    <string name="category_support">دعم التطوير</string>
+    <string name="go_premium_no_ads">الترقية إلى Premium</string>
+
+    <string name="category_ads_privacy">الإعلانات والخصوصية</string>
+    <string name="personalized_ads">إعلانات مخصصة</string>
+    <string name="watch_ad_support">الدعم بمشاهدة إعلان</string>
+    <string name="watch_ad_premium">شاهد إعلان للحصول على Premium لمدة ساعتين</string>
+    <string name="premium_unlocked_success">تم فتح Premium لمدة ساعتين</string>
+    <string name="free_version">النسخة المجانية</string>
+    <string name="premium_feature_title">ميزة Premium</string>
+    <string name="premium_feature_message">هذه الميزة متاحة في نسخة Premium. قم بالترقية الدائمة أو شاهد إعلاناً لفتحها لمدة ساعتين.</string>
+    <string name="watch_ad">مشاهدة إعلان</string>
+    <string name="upgrade">ترقية</string>
+
+    <string name="support_title">دعم TouchLock</string>
+    <string name="support_message">TouchLock مجاني للاستخدام. نسخة Premium تزيل الإعلانات وتفتح ميزات إضافية.</string>
+    <string name="support_dev_title">دعم المطور</string>
+    <string name="support_dev_message">هذا دعم اختياري للمطور.\nهذا لن يفتح ميزات Premium.\nهذا لن يزيل الإعلانات.\nهذا اختياري.</string>
+    <string name="continue_text">استمرار</string>
+    <string name="thank_you_title">شكراً لك ❤️</string>
+    <string name="thank_you_message">شكراً لدعمك للمطور.\nدعمك يساعد في تحسين التطبيق.\n\nهذا الدعم لا يفتح ميزات Premium.</string>
+    <string name="ok">موافق</string>
+
+    <string name="system_status">حالة النظام</string>
+    <string name="overlay_granted">التراكب: تم المنح</string>
+    <string name="overlay_not_granted">التراكب: لم يتم المنح</string>
+    <string name="usage_granted">الاستخدام: تم المنح</string>
+    <string name="usage_not_granted">الاستخدام: لم يتم المنح</string>
+    <string name="battery_unrestricted">البطارية: غير مقيدة</string>
+    <string name="battery_optimized">البطارية: محسنة</string>
+    <string name="stop_everything">إيقاف كل شيء</string>
+    <string name="auto_start">تشغيل تلقائي</string>
+    <string name="pick_apps">اختر التطبيقات</string>
+    <string name="quick_tools">أدوات سريعة</string>
+    <string name="monitor_mode">وضع المراقبة</string>
+    <string name="needs_permission">يحتاج إلى إذن</string>
+
+    <string name="lock_starts_in">سيبدأ قفل اللمس خلال %1$d ثانية...</string>
+    <string name="unlock_hint_prefix">إلغاء القفل: </string>
+    <string name="unlock_method_button">زر</string>
+    <string name="unlock_method_double_tap">نقر مزدوج</string>
+    <string name="unlock_method_pin">PIN</string>
+    <string name="unlock_method_notification">إشعار</string>
+    <string name="enter_pin_to_unlock">أدخل رمز PIN لإلغاء القفل</string>
+    <string name="wrong_pin">رمز PIN خاطئ</string>
+    <string name="cancel">إلغاء</string>
+
+    <string name="notification_monitoring_active">مراقبة التطبيقات المختارة • قفل اللمس نشط</string>
+    <string name="notification_monitoring">مراقبة التطبيقات المختارة</string>
+    <string name="notification_active">قفل اللمس نشط</string>
+    <string name="notification_running">TouchLock يعمل</string>
+
+    <string name="touch_is_locked">اللمس مقفل</string>
+    <string name="unlock_long_press">إلغاء القفل (ضغط مطول)</string>
+    <string name="premium_unlocks">ميزات Premium:</string>
+    <string name="premium_features_list">• إزالة جميع الإعلانات\n• خيارات حماية متقدمة\n• قفل تلقائي أسرع\n• تحديثات ذات أولوية</string>
+    <string name="buy_premium">شراء Premium</string>
+    <string name="restore_purchase">استعادة المشتريات</string>
+    <string name="settings_saved">تم حفظ الإعدادات!</string>
+    <string name="pin_length_warning">يجب أن يتكون رمز PIN من 4 أرقام على الأقل</string>
+    <string name="choose_apps_title">اختر تطبيقات لقفل التشغيل التلقائي</string>
+    <string name="monitor_mode_started">بدأ وضع المراقبة</string>
+    <string name="pick_one_app_warning">يرجى اختيار تطبيق واحد على الأقل</string>
+    <string name="usage_access_toast">ابحث عن TouchLock واسمح بالوصول إلى الاستخدام</string>
+    <string name="billing_not_ready">خدمة الدفع غير جاهزة</string>
+    <string name="billing_unavailable">تم تحميل شاشة Premium، الدفع غير متاح</string>
+
+    <!-- Monitor Mode Explanation Dialog -->
+    <string name="monitor_mode_explain_title">كيف يعمل وضع المراقبة</string>
+    <string name="monitor_mode_explain_message">لماذا نحتاج هذا؟\n\n🔒 الوضع اليدوي:\nيجب عليك فتح TouchLock والضغط على \"قفل الآن\" في كل مرة.\n\n✨ وضع المراقبة (ذكية):\nيراقب TouchLock التطبيقات التي تختارها (مثل YouTube أو Netflix).\nبمجرد فتحها، تقفل الشاشة تلقائيًا.\n\nلتفعيل هذه الميزة، يجب عليك السماح بـ \"الوصول إلى الاستخدام\" في الشاشة التالية.</string>
+</resources>

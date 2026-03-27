@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upgrade to Premium"
+            android:text="@string/upgrade_to_premium"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/text_main" />
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Premium unlocks:"
+            android:text="@string/premium_unlocks"
             android:textColor="@color/text_main"
             android:textSize="16sp" />
 
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="• Remove all ads\n• Advanced protection options\n• Faster auto-lock\n• Priority updates"
+            android:text="@string/premium_features_list"
             android:textColor="@color/text_secondary"
             android:textSize="15sp" />
 
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Buy Premium"
+            android:text="@string/buy_premium"
             android:background="@drawable/bg_primary_button"
             android:textColor="@android:color/white" />
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Restore Purchase"
+            android:text="@string/restore_purchase"
             android:background="@drawable/bg_secondary_button"
             android:textColor="@color/text_main" />
 

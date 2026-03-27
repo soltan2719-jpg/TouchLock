@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">TouchLock</string>
+    <string name="lock_now">Nu vergrendelen</string>
+    <string name="unlock">Ontgrendelen</string>
+    <string name="protection_active">Bescherming actief.</string>
+    <string name="touchlock_ready">TouchLock is gereed.</string>
+    <string name="premium_enabled">Premium Actief</string>
+    <string name="upgrade_to_premium">Upgraden naar Premium</string>
+    <string name="upgrade_to_permanent_premium">Upgraden naar Permanent Premium</string>
+    <string name="selected_apps_none">Geselecteerde apps: geen</string>
+    <string name="apps_selected_for_autostart">Apps geselecteerd voor automatische start:</string>
+
+    <string name="premium_already_have">Je hebt al Premium</string>
+    <string name="premium_not_active">Premium niet actief</string>
+    <string name="ready">Gereed</string>
+    <string name="protection_settings">Beschermingsinstellingen</string>
+    <string name="show_unlock_button">Ontgrendelknop weergeven</string>
+    <string name="enable_double_tap_unlock">Dubbeltikken om te ontgrendelen</string>
+    <string name="require_pin_to_unlock">PIN vereisen om te ontgrendelen (Premium)</string>
+    <string name="keep_screen_on_while_locked">Scherm AAN forceren (Premium)</string>
+
+    <string name="settings_title">Instellingen</string>
+    <string name="save">OPSLAAN</string>
+    <string name="category_protection">BESCHERMING</string>
+    <string name="invisible_unlock_mode">Onzichtbare ontgrendelmodus (Premium)</string>
+    <string name="category_sensitivity">GEVOELIGHEID</string>
+    <string name="shake_to_lock">Schudden om te vergrendelen</string>
+    <string name="sensitivity_hard">Hard</string>
+    <string name="sensitivity_light">Licht</string>
+    <string name="category_security">BEVEILIGING</string>
+    <string name="unlock_pin">Ontgrendel PIN</string>
+    <string name="pin_hint">Minimaal 4 cijfers</string>
+    <string name="auto_lock_delay">Auto-vergrendel vertraging</string>
+    <string name="delay_hint">Seconden (0 = direct)</string>
+    <string name="category_support">ONTWIKKELING STEUNEN</string>
+    <string name="go_premium_no_ads">Upgraden naar Premium</string>
+
+    <string name="category_ads_privacy">ADVERTENTIES &amp; PRIVACY</string>
+    <string name="personalized_ads">Gepersonaliseerde advertenties</string>
+    <string name="watch_ad_support">Steunen met een advertentie</string>
+    <string name="watch_ad_premium">Bekijk advertentie voor 2 uur Premium</string>
+    <string name="premium_unlocked_success">Premium ontgrendeld voor 2 uur</string>
+    <string name="free_version">Gratis versie</string>
+    <string name="premium_feature_title">Premium Functie</string>
+    <string name="premium_feature_message">Deze functie is beschikbaar in Premium. Upgrade permanent of bekijk een advertentie om het voor 2 uur te ontgrendelen.</string>
+    <string name="watch_ad">Advertentie bekijken</string>
+    <string name="upgrade">Upgraden</string>
+
+    <string name="support_title">TouchLock steunen</string>
+    <string name="support_message">TouchLock is gratis te gebruiken. Premium verwijdert advertenties en ontgrendelt extra functies.</string>
+    <string name="support_dev_title">Ontwikkelaar steunen</string>
+    <string name="support_dev_message">Dit is een vrijwillige tip om de ontwikkelaar te steunen.\nDit zal premium functies NIET ontgrendelen.\nDit zal advertenties NIET verwijderen.\nDit is optioneel.</string>
+    <string name="continue_text">Doorgaan</string>
+    <string name="thank_you_title">Dank je wel ❤️</string>
+    <string name="thank_you_message">Bedankt voor het steunen van de ontwikkelaar.\nJe tip helpt de app te verbeteren.\n\nDeze tip ontgrendelt geen premium functies.</string>
+    <string name="ok">OK</string>
+
+    <string name="system_status">Systeemstatus</string>
+    <string name="overlay_granted">Overlay: Toegestaan</string>
+    <string name="overlay_not_granted">Overlay: Niet toegestaan</string>
+    <string name="usage_granted">Gebruik: Toegestaan</string>
+    <string name="usage_not_granted">Gebruik: Niet toegestaan</string>
+    <string name="battery_unrestricted">Batterij: Onbeperkt</string>
+    <string name="battery_optimized">Batterij: Geoptimaliseerd</string>
+    <string name="stop_everything">Alles stoppen</string>
+    <string name="auto_start">Auto-Start</string>
+    <string name="pick_apps">Apps kiezen</string>
+    <string name="quick_tools">Snelkoppelingen</string>
+    <string name="monitor_mode">Monitor modus</string>
+    <string name="needs_permission">Toestemming nodig</string>
+
+    <string name="lock_starts_in">Aanraakvergrendeling start in %1$d seconde(n)...</string>
+    <string name="unlock_hint_prefix">Ontgrendelen: </string>
+    <string name="unlock_method_button">knop</string>
+    <string name="unlock_method_double_tap">dubbeltikken</string>
+    <string name="unlock_method_pin">PIN</string>
+    <string name="unlock_method_notification">melding</string>
+    <string name="enter_pin_to_unlock">Voer PIN in om te ontgrendelen</string>
+    <string name="wrong_pin">Verkeerde PIN</string>
+    <string name="cancel">Annuleren</string>
+
+    <string name="notification_monitoring_active">Monitoring geselecteerde apps • Aanraakvergrendeling actief</string>
+    <string name="notification_monitoring">Monitoring geselecteerde apps</string>
+    <string name="notification_active">Aanraakvergrendeling actief</string>
+    <string name="notification_running">TouchLock draait</string>
+
+    <string name="touch_is_locked">Aanraking is VERGRENDELD</string>
+    <string name="unlock_long_press">ONTGRENDELEN (Lang indrukken)</string>
+    <string name="premium_unlocks">Premium ontgrendelt:</string>
+    <string name="premium_features_list">• Verwijder alle advertenties\n• Geavanceerde beschermingsopties\n• Snellere auto-vergrendeling\n• Prioriteitsupdates</string>
+    <string name="buy_premium">Premium kopen</string>
+    <string name="restore_purchase">Aankoop herstellen</string>
+    <string name="settings_saved">Instellingen opgeslagen!</string>
+    <string name="pin_length_warning">PIN moet minimaal 4 cijfers bevatten</string>
+    <string name="choose_apps_title">Kies apps voor auto-start vergrendeling</string>
+    <string name="monitor_mode_started">Monitor modus gestart</string>
+    <string name="pick_one_app_warning">Kies ten minste één app</string>
+    <string name="usage_access_toast">Zoek TouchLock en sta Gebruikstoegang toe</string>
+    <string name="billing_not_ready">Factureringsservice niet gereed</string>
+    <string name="billing_unavailable">Premium scherm geladen, facturering niet beschikbaar</string>
+
+    <!-- Monitor Mode Explanation Dialog -->
+    <string name="monitor_mode_explain_title">Hoe de Monitor-modus werkt</string>
+    <string name="monitor_mode_explain_message">Waarom hebben we dit nodig?\n\n🔒 Handmatige modus:\nJe moet TouchLock openen en elke keer op \"Nu vergrendelen\" drukken.\n\n✨ Monitor-modus (Slim):\nTouchLock houdt de apps in de gaten die je kiest (zoals YouTube of Netflix).\nZodra je ze opent, vergrendelt het scherm automatisch.\n\nOm deze functie in te schakelen, moet je op het volgende scherm \"Toegang tot gebruik\" toestaan.</string>
+</resources>

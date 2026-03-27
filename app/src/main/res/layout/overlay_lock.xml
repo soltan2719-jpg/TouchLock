@@ -33,7 +33,7 @@
             android:id="@+id/txtHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Touch is LOCKED"
+            android:text="@string/touch_is_locked"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:gravity="center"
@@ -43,9 +43,9 @@
             android:id="@+id/unlockButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UNLOCK (Long press)"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp" />
+            android:text="@string/unlock_long_press"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp" />
     </LinearLayout>
 
 </FrameLayout>

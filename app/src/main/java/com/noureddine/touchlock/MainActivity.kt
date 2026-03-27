@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             if (selectedPackages.isEmpty()) {
-                Toast.makeText(this, "Please choose at least one app", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.pick_one_app_warning), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val intent = Intent(this, TouchLockService::class.java).apply {
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             }
             startTouchLockService(intent)
             Prefs.setMonitorEnabled(this, true)
-            Toast.makeText(this, "Monitor mode started", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.monitor_mode_started), Toast.LENGTH_SHORT).show()
         }
 
         binding.btnStopAll.setOnClickListener {
@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity() {
             } catch (_: Exception) {
                 startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
             }
-            Toast.makeText(this, "Find TouchLock and allow Usage Access", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.usage_access_toast), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -284,7 +284,7 @@ class MainActivity : AppCompatActivity() {
         val pin = binding.edtPin.text.toString().trim()
         val delay = binding.edtDelay.text.toString().trim().toIntOrNull() ?: 0
         if (binding.switchRequirePin.isChecked && pin.length < 4) {
-            Toast.makeText(this, "PIN must be at least 4 digits", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.pin_length_warning), Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -371,16 +371,16 @@ class MainActivity : AppCompatActivity() {
         val labels = installedApps.map { "${it.label}\n${it.packageName}" }.toTypedArray()
         val checked = installedApps.map { selectedPackages.contains(it.packageName) }.toBooleanArray()
         AlertDialog.Builder(this)
-            .setTitle("Choose apps for auto-start lock")
+            .setTitle(getString(R.string.choose_apps_title))
             .setMultiChoiceItems(labels, checked) { _, which, isChecked ->
                 val pkg = installedApps[which].packageName
                 if (isChecked) selectedPackages.add(pkg) else selectedPackages.remove(pkg)
             }
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
                 Prefs.setSelectedPackages(this, selectedPackages)
                 updateSelectedAppsText()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -414,7 +414,7 @@ class MainActivity : AppCompatActivity() {
         view.findViewById<Button>(R.id.dialogBtnTip1).setOnClickListener { billing.buyTip1() }
         view.findViewById<Button>(R.id.dialogBtnTip2).setOnClickListener { billing.buyTip2() }
         view.findViewById<Button>(R.id.dialogBtnTip5).setOnClickListener { billing.buyTip5() }
-        AlertDialog.Builder(this).setView(view).setNegativeButton("Close", null).show()
+        AlertDialog.Builder(this).setView(view).setNegativeButton(getString(R.string.cancel), null).show()
     }
 
     override fun onDestroy() {

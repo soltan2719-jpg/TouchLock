@@ -98,7 +98,7 @@ class SettingsActivity : AppCompatActivity() {
 
         btnSave?.setOnClickListener {
             if (saveSettings()) {
-                Toast.makeText(this, "Settings Saved!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.settings_saved), Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -195,7 +195,7 @@ class SettingsActivity : AppCompatActivity() {
         val delay = edtDelay.text.toString().trim().toIntOrNull() ?: 0
 
         if (switchRequirePin.isChecked && pin.length < 4) {
-            Toast.makeText(this, "PIN must be at least 4 digits", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.pin_length_warning), Toast.LENGTH_SHORT).show()
             return false
         }
 
