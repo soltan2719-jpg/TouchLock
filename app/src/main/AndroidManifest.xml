@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
 
     <application
         android:allowBackup="true"
@@ -30,6 +31,10 @@
             android:value="ca-app-pub-8507852404489271~7012629583"/>
 
         <!-- Activities -->
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="false" />
+
         <activity
             android:name=".CollapseActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
