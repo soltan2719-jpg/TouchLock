@@ -109,4 +109,9 @@
     <!-- Monitor Mode Explanation Dialog -->
     <string name="monitor_mode_explain_title">How Monitor Mode works</string>
     <string name="monitor_mode_explain_message">Why do we need this?\n\n🔒 Manual Mode:\nYou have to open TouchLock and press \"Lock Now\" every time.\n\n✨ Monitor Mode (Smart):\nTouchLock watches the apps you choose (like YouTube or Netflix).\nAs soon as you open them, the screen locks automatically.\n\nTo enable this feature, you must allow \"Usage Access\" on the next screen.</string>
+
+    <!-- Onboarding Strings -->
+    <string name="onboarding_welcome">Welcome to TouchLock</string>
+    <string name="onboarding_description">Protect your screen from accidental touches while watching videos or playing games.</string>
+    <string name="get_started">Get Started</string>
 </resources>

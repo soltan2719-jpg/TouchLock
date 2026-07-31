@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         val filter = IntentFilter("com.noureddine.touchlock.STATUS_CHANGED")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(statusReceiver, filter, Context.RECEIVER_EXPORTED)
+            registerReceiver(statusReceiver, filter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(statusReceiver, filter)
         }

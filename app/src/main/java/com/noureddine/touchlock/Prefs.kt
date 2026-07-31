@@ -20,6 +20,8 @@ object Prefs {
     private const val KEY_INVISIBLE_UNLOCK_BUTTON = "invisible_unlock_button"
     private const val KEY_PERSONALIZED_ADS = "personalized_ads"
     private const val KEY_ADS_DISABLED_UNTIL = "ads_disabled_until"
+    private const val KEY_FIRST_TIME_PICK_APPS = "first_time_pick_apps"
+    private const val KEY_FIRST_TIME_USER = "first_time_user"
 
     private fun prefs(context: Context) =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -120,5 +122,19 @@ object Prefs {
 
     fun setPersonalizedAdsEnabled(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_PERSONALIZED_ADS, value).apply()
+    }
+
+    fun isFirstTimePickApps(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_FIRST_TIME_PICK_APPS, true)
+
+    fun setFirstTimePickApps(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_FIRST_TIME_PICK_APPS, value).apply()
+    }
+
+    fun isFirstTimeUser(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_FIRST_TIME_USER, true)
+
+    fun setFirstTimeUser(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_FIRST_TIME_USER, value).apply()
     }
 }
